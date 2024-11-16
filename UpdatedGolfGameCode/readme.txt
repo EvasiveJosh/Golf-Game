@@ -55,6 +55,5 @@ General notes:
     Also for the terrain class and any other added classes, PLEASE make them MODULAR!!!!!!!! (It makes life easy)
 
 READ THE CODE, UNDERSTAND WHAT IT DOES!
-Ill try to upload the exe in the zip file as well as you will not be able to compile the code yourself without raylib. 
 
 Im too tired to continue. Let me know if you got any questions.
