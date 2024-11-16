@@ -22,6 +22,7 @@ set(SOURCES
     src/singleplayerMatch.cpp
     src/ball.cpp
     src/match.cpp
+    src/terrain.cpp
 )
 
 set(HEADERS
@@ -40,6 +41,7 @@ set(HEADERS
     src/singleplayerMatch.h
     src/ball.h
     src/match.h
+    src/terrain.h
 )
 
 add_compile_options(-static -static-libgcc -static-libstdc++)
