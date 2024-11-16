@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.25)
 project(guifinal)
 
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Add sources and headers
 set(SOURCES
     program.cpp
     mouse.cpp
@@ -39,5 +41,17 @@ set(HEADERS
     match.h
 )
 
-add_executable(main main.cpp ${SOURCES} ${HEADERS}) 
+# FetchContent to download raylib if not available
+include(FetchContent)
+
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+    GIT_TAG 4.5.0  # Replace with the desired raylib version
+)
+
+FetchContent_MakeAvailable(raylib)
+
+# Create the executable and link raylib
+add_executable(main main.cpp ${SOURCES} ${HEADERS})
 target_link_libraries(main raylib)
