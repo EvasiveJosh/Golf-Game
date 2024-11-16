@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include "match.h"
-
-
+#include "raylib.h"
+#include "ball.h"
 
 class TerrainSquare{
     private:
@@ -13,7 +13,8 @@ class TerrainSquare{
         int width;
         int id;
     public:
-        void DrawSquare();
+        TerrainSquare(int height, int posX, int width, int id);
+        void DrawSquare(TerrainSquare sq);
         int getHeight();
         int getPosX();
         int getId();
