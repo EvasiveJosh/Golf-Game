@@ -5,6 +5,7 @@
 #include "match.h"
 #include "raylib.h"
 #include "ball.h"
+#include "random"
 
 class TerrainSquare{
     private:
@@ -14,7 +15,7 @@ class TerrainSquare{
         int id;
     public:
         TerrainSquare(int height, int posX, int width, int id);
-        void DrawSquare(TerrainSquare sq);
+        // void DrawSquare(TerrainSquare sq);
         int getHeight();
         int getPosX();
         int getId();
@@ -25,8 +26,7 @@ class Terrain{
     private:
         int difficulty;
     public:
-        void DrawTerrain(int difficulty);
-
+        TerrainSquare DrawTerrain(int difficulty);
 };
 
 #endif
