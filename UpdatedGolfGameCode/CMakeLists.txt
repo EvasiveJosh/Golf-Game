@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(guifinal)
+project(golfgame)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -41,9 +41,28 @@ set(HEADERS
     match.h
 )
 
-add_link_options(-static-libgcc -static-libstdc++)
+add_compile_options(-static -static-libgcc -static-libstdc++)
+add_link_options(-static)
 
+
+# FetchContent to download raylib if not available
+include(FetchContent)
+
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+    GIT_TAG 4.5.0  # Replace with the desired raylib version
+)
+
+FetchContent_MakeAvailable(raylib)
 
 # Create the executable and link raylib
 add_executable(main main.cpp ${SOURCES} ${HEADERS})
 target_link_libraries(main raylib)
+
+add_custom_target(copyresources ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources
+    ${CMAKE_BINARY_DIR}/resources
+    COMMENT "Copying resources to the build directory" #folder that has the images
+)

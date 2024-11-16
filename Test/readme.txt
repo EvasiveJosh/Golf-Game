@@ -1,1 +1,0 @@
-Download the 4 files, place them in a folder, and run the exe.
