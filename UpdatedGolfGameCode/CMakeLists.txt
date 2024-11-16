@@ -41,16 +41,8 @@ set(HEADERS
     match.h
 )
 
-# FetchContent to download raylib if not available
-include(FetchContent)
+add_link_options(-static-libgcc -static-libstdc++)
 
-FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG 4.5.0  # Replace with the desired raylib version
-)
-
-FetchContent_MakeAvailable(raylib)
 
 # Create the executable and link raylib
 add_executable(main main.cpp ${SOURCES} ${HEADERS})
