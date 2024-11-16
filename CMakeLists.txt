@@ -44,8 +44,20 @@ set(HEADERS
     src/terrain.h
 )
 
-add_compile_options(-static -static-libgcc -static-libstdc++)
-add_link_options(-static)
+add_compile_options(
+    -static 
+    -static-libgcc 
+    -static-libstdc++ 
+    #Forces the program to crash if undefined behavior occurs (to be removed during release build)
+    -fsanitize=undefined 
+    -fsanitize-undefined-trap-on-error 
+    )
+add_link_options(
+    -static 
+    #Forces the program to crash if undefined behavior occurs (to be removed during release build)
+    -fsanitize=undefined 
+    -fsanitize-undefined-trap-on-error 
+    )
 
 
 # FetchContent to download raylib if not available
