@@ -8,6 +8,7 @@
 #include "mouse.h"
 #include "ball.h"
 #include "match.h"
+#include "terrain.h"
 
 /*
 TODO:
