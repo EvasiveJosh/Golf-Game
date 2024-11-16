@@ -1,13 +1,13 @@
 #ifndef MATCH_H
 #define MATCH_H
 
+#include <vector>
+#include <string>
+#include <stdexcept>
 #include "raylib.h"
 #include "mouse.h"
 #include "button.h"
 #include "textureClass.h"
-#include <vector>
-#include <string>
-#include <stdexcept>
 #include "screenSizeTransfer.h"
 #include "GuiEnum.h"
 #include "ball.h"

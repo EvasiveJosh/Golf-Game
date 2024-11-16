@@ -2,9 +2,9 @@
 #define PROGRAM_H
 
 //Required includes for Gui
+#include <memory>
 #include "raylib.h"
 #include "screenSizeTransfer.h"
-#include <memory>
 #include "GuiEnum.h"
 #include "mouse.h"
 #include "menu.h"

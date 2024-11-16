@@ -8,37 +8,38 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Add sources and headers
 set(SOURCES
-    program.cpp
-    mouse.cpp
-    menu.cpp
-    button.cpp
-    textureClass.cpp
-    startMenu.cpp
-    generalSettingsMenu.cpp
-    multiplayerMenu.cpp
-    joinMultiplayerMenu.cpp
-    singleplayerGameSettingsMenu.cpp
-    singleplayerMatch.cpp
-    ball.cpp
-    match.cpp
+    src/main.cpp
+    src/program.cpp
+    src/mouse.cpp
+    src/menu.cpp
+    src/button.cpp
+    src/textureClass.cpp
+    src/startMenu.cpp
+    src/generalSettingsMenu.cpp
+    src/multiplayerMenu.cpp
+    src/joinMultiplayerMenu.cpp
+    src/singleplayerGameSettingsMenu.cpp
+    src/singleplayerMatch.cpp
+    src/ball.cpp
+    src/match.cpp
 )
 
 set(HEADERS
-    program.h
-    ScreenSizeTransfer.h
-    GuiEnum.h
-    mouse.h
-    menu.h
-    button.h
-    textureClass.h
-    startMenu.h
-    generalSettingsMenu.h
-    multiplayerMenu.h
-    joinMultiplayerMenu.h
-    singleplayerGameSettingsMenu.h
-    singleplayerMatch.h
-    ball.h
-    match.h
+    src/program.h
+    src/ScreenSizeTransfer.h
+    src/GuiEnum.h
+    src/mouse.h
+    src/menu.h
+    src/button.h
+    src/textureClass.h
+    src/startMenu.h
+    src/generalSettingsMenu.h
+    src/multiplayerMenu.h
+    src/joinMultiplayerMenu.h
+    src/singleplayerGameSettingsMenu.h
+    src/singleplayerMatch.h
+    src/ball.h
+    src/match.h
 )
 
 add_compile_options(-static -static-libgcc -static-libstdc++)
@@ -57,7 +58,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 # Create the executable and link raylib
-add_executable(main main.cpp ${SOURCES} ${HEADERS})
+add_executable(main ${SOURCES} ${HEADERS})
 target_link_libraries(main raylib)
 
 add_custom_target(copyresources ALL

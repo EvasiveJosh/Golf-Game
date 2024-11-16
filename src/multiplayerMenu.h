@@ -1,8 +1,8 @@
 #ifndef MULTIPLAYERMENU_H
 #define MULTIPLAYERMENU_H
 
-#include "menu.h"
 #include <iostream>
+#include "menu.h"
 
 enum MultiplayerMenuButton
 {

@@ -1,9 +1,9 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <string>
 #include "raylib.h"
 #include "Mouse.h"
-#include <string>
 #include "screenSizeTransfer.h"
 
 class Button

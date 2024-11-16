@@ -1,8 +1,8 @@
 #ifndef JOINMULTIPLAYERMENU_H
 #define JOINMULTIPLAYERMENU_H
 
-#include "menu.h"
 #include <iostream>
+#include "menu.h"
 
 enum JoinMultiplayerMenuButton
 {

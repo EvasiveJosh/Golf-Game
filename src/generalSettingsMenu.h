@@ -1,8 +1,8 @@
 #ifndef GENERALSETTINGSMENUMENU_H
 #define GENERALSETTINGSMENUMENU_H
 
-#include "menu.h"
 #include <iostream>
+#include "menu.h"
 
 enum GeneralSettingsMenuButton
 {
