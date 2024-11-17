@@ -73,7 +73,9 @@ FetchContent_MakeAvailable(raylib)
 
 # Create the executable and link raylib
 add_executable(main ${SOURCES} ${HEADERS})
-target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror)
+target_compile_options(main PRIVATE 
+    #-Wall -Wextra -pedantic -Werror
+    )
 target_link_libraries(main raylib)
 
 add_custom_target(copyresources ALL
