@@ -9,6 +9,7 @@
 #include "ball.h"
 #include "match.h"
 #include "terrain.h"
+#include "vector"
 
 /*
 TODO:
@@ -21,6 +22,8 @@ TODO:
 
 class SingleplayerMatch : public Match
 {
+    private:
+        std::vector<TerrainSquare> terrain;
     public:
         SingleplayerMatch(int difficulty, int wind, bool endlessMode);
         void draw() override;

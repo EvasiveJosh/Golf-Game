@@ -7,7 +7,8 @@ SingleplayerMatch::SingleplayerMatch(int difficulty, int wind, bool endlessMode)
     this->wind = wind;
     this->endlessMode = endlessMode;
     end = false;
-
+    Terrain terrainGenerator;
+    std::vector<TerrainSquare> terrain = terrainGenerator.DrawTerrain(difficulty);
     //Load mouse
     mouse = Mouse();
     //Load golfball
@@ -22,15 +23,21 @@ SingleplayerMatch::SingleplayerMatch(int difficulty, int wind, bool endlessMode)
 
 void SingleplayerMatch::draw()
 {
-    //Draw some default terrain
-    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+    // //Draw some default terrain
+    // DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+
+    DrawCircle(10,10,3,RED);
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
     //Draw some default hole
     DrawRectangle(sst::cx(sst::baseX - 100), sst::cy(sst::baseY - GRASS_HEIGHT - 10), sst::cx(20), sst::cx(20), MAGENTA);
 
+    // golfball.draw();
+    for (const TerrainSquare& square : terrain) {
+        DrawRectangle(square.getPosX(), sst::baseY - square.getHeight(), square.getWidth(), square.getHeight(), GREEN);
+    }
+    // Draw other elements (e.g., golfball)
     golfball.draw();
-
 }
 
 void SingleplayerMatch::drawDebug()

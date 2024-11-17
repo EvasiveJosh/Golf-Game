@@ -7,6 +7,9 @@
 #include "ball.h"
 #include "random"
 #include "vector"
+#include <cstdlib>
+#include <ctime>  
+
 
 class TerrainSquare{
     private:
@@ -17,9 +20,10 @@ class TerrainSquare{
     public:
         TerrainSquare(int height, int posX, int width, int id);
         // void DrawSquare(TerrainSquare sq);
-        int getHeight();
-        int getPosX();
-        int getId();
+        int getHeight() const;
+        int getPosX() const;
+        int getId() const;
+        int getWidth() const;
 };
 
 
@@ -27,7 +31,7 @@ class Terrain{
     private:
         int difficulty;
     public:
-        vector<TerrainSquare> DrawTerrain(int difficulty);
+        std::vector<TerrainSquare> DrawTerrain(int difficulty);
 };
 
 #endif
