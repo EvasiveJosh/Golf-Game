@@ -8,8 +8,7 @@ TerrainSquare::TerrainSquare(int h, int X, int w, int i){
     posX = X;
     width = w;
     id = i;
-
-    DrawRectangle(X, GRASS_HEIGHT, w, h, GREEN);
+    // DrawRectangle(X, GRASS_HEIGHT, w, h, GREEN);
 }
 // void TerrainSquare::DrawSquare(TerrainSquare sq){
 //     DrawRetangle(sq.posX, GRASS_HEIGHT, sq.width, sq.height, GREEN);
@@ -41,16 +40,12 @@ vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
     int x = 0;
     vector<TerrainSquare> terrain; //vector that holds the segment objects
     srand(time(0));
-    // for(int i = 0; i<levelSize ;i++){
-    //     int randomHeight = rand() % 20 + 5;
-    //     terrain.emplace_back(randomHeight, x, 5, i + 1);
-    //     x+=5;
-    // }
-    for (int i = 0; i < levelSize; i++) {
-        int randomHeight = rand() % 100 + 20; // Increased height range for visibility
-        int width = 50; // Adjust width to be more visible
-        terrain.emplace_back(randomHeight, x, width, i + 1); // Create square
-        x += width; // Offset x by the width to avoid overlap
+    for(int i = 0; i<levelSize ;i++){
+        int randomHeight = rand() % 40 + 10; // Increased height range for visibility
+        int width = 15;
+        TerrainSquare temp(randomHeight,x,width,i+1);
+        terrain.push_back(temp);
+        x += width;
     }
 
     return terrain;
