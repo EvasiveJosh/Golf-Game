@@ -24,7 +24,7 @@ int TerrainSquare::getId(){
     return id;
 }
 
-TerrainSquare Terrain::DrawTerrain(int difficulty){
+vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
     int levelSize = 0;
     if(difficulty == 0){ //difficulty easy
         levelSize = 2;
@@ -35,13 +35,13 @@ TerrainSquare Terrain::DrawTerrain(int difficulty){
     else{ //difficulty hard
         levelSize = 6;
     }
-    int squareId = 1;
     int x = 0;
-    TerrainSquare terrain[levelSize];
+    vector<TerrainSquare> terrain; //vector that holds the segment objects
 
     for(int i = 0; i<levelSize ;i++){
-        terrain[i] = TerrainSquare(5,x,5,squareId);
-        x += 5;
-        squareId++;
+        terrain.emplace_back(5, x, 5, i + 1);
+        x+=5;
     }
+
+    return terrain;
 }

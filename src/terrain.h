@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "ball.h"
 #include "random"
+#include "vector"
 
 class TerrainSquare{
     private:
@@ -26,7 +27,7 @@ class Terrain{
     private:
         int difficulty;
     public:
-        TerrainSquare DrawTerrain(int difficulty);
+        vector<TerrainSquare> DrawTerrain(int difficulty);
 };
 
 #endif
