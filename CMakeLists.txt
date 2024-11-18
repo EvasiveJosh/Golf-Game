@@ -25,6 +25,7 @@ set(SOURCES
     src/terrain.cpp
     src/gameMusic.cpp
     src/userSettings.cpp
+    src/singleplayerWinMenu.cpp
 )
 
 set(HEADERS
@@ -47,6 +48,7 @@ set(HEADERS
     src/raygui.h
     src/gameMusic.h
     src/userSettings.h
+    src/singleplayerWinMenu.h
 )
 
 add_compile_options(
