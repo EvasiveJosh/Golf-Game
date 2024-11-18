@@ -10,7 +10,7 @@ Program::Program() : currentMusic()
     SetExitKey(KEY_NULL); //Removes escape as the exit key
     debug = false;
     //Initializes starting menu
-    currentMenu = std::make_unique<GeneralSettingsMenu>();
+    currentMenu = std::make_unique<StartMenu>();
     inSingleplayerGame = false;
     bool inMultiplayerGame = false;
 }
