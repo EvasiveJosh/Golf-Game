@@ -1,6 +1,7 @@
 # TODO
 
-1. Fix the volume slider, so that when you enter general settings menu, volume is set to what the current volume level is
+1. Fix the volume slider, so that when you enter general settings menu, volume is set to what the current volume level is.
+2. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
 
 
 # Golf-Game
