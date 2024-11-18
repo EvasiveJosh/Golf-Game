@@ -1,7 +1,7 @@
 #include "program.h"
 
 
-Program::Program() : currentMusic()
+Program::Program() : currentMusic(), settings()
 {
     InitWindow(sst::baseX, sst::baseY, "Game");
 
@@ -13,6 +13,7 @@ Program::Program() : currentMusic()
     currentMenu = std::make_unique<StartMenu>();
     inSingleplayerGame = false;
     bool inMultiplayerGame = false;
+
 }
 
 void Program::close()
@@ -68,7 +69,7 @@ void Program::updateLogic(GuiEvent state)
             end = true;
             break;
         case OpenGeneralSettings:
-            this->currentMenu = std::make_unique<GeneralSettingsMenu>();
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings);
             break;
         case OpenStartingMenu:
             if (inSingleplayerGame)
@@ -87,17 +88,17 @@ void Program::updateLogic(GuiEvent state)
         case screenSizeTo480p:
             SetWindowSize(854, 480);
             SetWindowPosition(GetMonitorWidth(0)/2 - 854/2, GetMonitorHeight(0)/2 - 480/2); 
-            this->currentMenu = std::make_unique<GeneralSettingsMenu>(); 
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo720p:
             SetWindowSize(1280, 720);
             SetWindowPosition(GetMonitorWidth(0)/2 - 1280/2, GetMonitorHeight(0)/2 - 720/2); 
-            this->currentMenu = std::make_unique<GeneralSettingsMenu>(); 
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1080p:
             SetWindowSize(1920, 1080);
             SetWindowPosition(GetMonitorWidth(0)/2 - 1920/2, GetMonitorHeight(0)/2 - 1080/2);
-            this->currentMenu = std::make_unique<GeneralSettingsMenu>(); 
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1440p:
             
@@ -122,7 +123,8 @@ void Program::updateLogic(GuiEvent state)
             break;
         
         case SetVolume:
-            currentMusic.setVolumeLevel(currentMenu->getVolumeLevel());
+            this->settings.setVolume(currentMenu->getVolumeLevel());
+            currentMusic.setVolumeLevel(this->settings.getVolume());
             break;
         
     }

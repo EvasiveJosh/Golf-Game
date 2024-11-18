@@ -1,6 +1,6 @@
 #include "generalSettingsMenu.h"
 
-GeneralSettingsMenu::GeneralSettingsMenu() : Menu()
+GeneralSettingsMenu::GeneralSettingsMenu(userSettings* settings) : Menu()
 {
     //Load mouse
     mouse = Mouse();
@@ -49,7 +49,7 @@ GeneralSettingsMenu::GeneralSettingsMenu() : Menu()
     //Determine which resolutions are not supported on main monitor
 
     //Default volume level
-    volumeLevel = 1.0f;
+    volumeLevel = settings->getVolume();
 
 }
 

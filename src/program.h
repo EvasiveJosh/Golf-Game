@@ -18,6 +18,8 @@
 #include "singleplayerMatch.h"
 //Other includes
 #include "gameMusic.h"
+#include "userSettings.h"
+
 
 
 class Program
@@ -33,6 +35,7 @@ class Program
         bool inMultiplayerGame;
         std::unique_ptr<Match> currentMatch;
         GameMusic currentMusic;
+        userSettings settings;
         
     public:
         Program();
