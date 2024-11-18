@@ -9,7 +9,8 @@
 
 enum ImageFinder
 {
-    Background_M
+    Background_M,
+    PixelFlag
 };
 
 class TextureClass

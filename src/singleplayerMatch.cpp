@@ -18,7 +18,12 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
-    addButton("Hole", {sst::baseX - 100, sst::baseY - GRASS_HEIGHT - 10, 20, 20});
+    addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying
+
+    //Load flag
+    flag.loadImage("resources", PixelFlag); //Get flag
+    flag.rescale((int)sst::cxf(100 * 0.317f), sst::cy(100)); //Rescale background to fit windowSize
+    flag.loadTexture(); //Load the image into a texture
 }
 
 void SingleplayerMatch::draw()
@@ -29,10 +34,9 @@ void SingleplayerMatch::draw()
     DrawCircle(10,10,3,RED);
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
-    //Draw some default hole
-    DrawRectangle(sst::cx(sst::baseX - 100), sst::cy(sst::baseY - GRASS_HEIGHT - 10), sst::cx(20), sst::cx(20), MAGENTA);
+    //Draw flag
+    DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 119), sst::cy(sst::baseY - GRASS_HEIGHT - 100 + 2), WHITE); //Do not modify without notifying
 
-    // golfball.draw();
     for (const TerrainSquare& square : terrain) {
         DrawRectangle(square.getPosX(), sst::baseY - square.getHeight(), square.getWidth(), square.getHeight(), GREEN);
     }

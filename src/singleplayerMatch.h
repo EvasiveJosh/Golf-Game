@@ -24,6 +24,7 @@ class SingleplayerMatch : public Match
 {
     private:
         std::vector<TerrainSquare> terrain;
+        TextureClass flag;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;

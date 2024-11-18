@@ -59,7 +59,7 @@ void JoinMultiplayerMenu::draw()
     DrawRectangleLines(sst::cx(hostnameTextBox.x), sst::cy(hostnameTextBox.y), sst::cx(hostnameTextBox.width), sst::cy(hostnameTextBox.height), buttons[2].isHovered(mouse) ? RED : BLACK);
     DrawText(username, sst::cx((int)usernameTextBox.x + 20), sst::cy((int)usernameTextBox.y + 8), sst::cx(font), MAROON);
     DrawText(hostname, sst::cx((int)hostnameTextBox.x + 20), sst::cy((int)hostnameTextBox.y + 8), sst::cx(font), MAROON);
-    if (isModifyingUsername || isModifyingUsername)
+    if (isModifyingUsername || isModifyingHostname)
     {
         text = "Must Finish Editing Before Continuing/Leaving";
         font = 20; 
@@ -79,6 +79,7 @@ void JoinMultiplayerMenu::drawDebug()
     //Show current selection
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(20), BLACK);
     DrawText(TextFormat("isModUser: %i", static_cast<int>(isModifyingUsername)), 0, sst::cy(40), sst::cx(20), BLACK);
+    DrawText(TextFormat("isModHost: %i", static_cast<int>(isModifyingHostname)), 0, sst::cy(80), sst::cx(20), BLACK);
 }
 
 GuiEvent JoinMultiplayerMenu::updateMenuLogic()
