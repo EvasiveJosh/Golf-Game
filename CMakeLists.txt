@@ -42,6 +42,7 @@ set(HEADERS
     src/ball.h
     src/match.h
     src/terrain.h
+    src/raygui.h
 )
 
 add_compile_options(
