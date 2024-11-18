@@ -24,10 +24,22 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
     flag.loadImage("resources", PixelFlag); //Get flag
     flag.rescale((int)sst::cxf(100 * 0.317f), sst::cy(100)); //Rescale background to fit windowSize
     flag.loadTexture(); //Load the image into a texture
+
+    // Initialize camera
+    camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
+    camera.offset = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Center of the screen
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
+    cameraShouldFollowBall = false;
+    cameraShouldCenter = false;
+    smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
 }
 
 void SingleplayerMatch::draw()
 {
+    // Start using camera
+    BeginMode2D(camera);
+
     // //Draw some default terrain
     // DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
 
@@ -42,6 +54,9 @@ void SingleplayerMatch::draw()
     }
     // Draw other elements (e.g., golfball)
     golfball.draw();
+
+    // End using camera (before drawing UI text)
+    EndMode2D();
 }
 
 void SingleplayerMatch::drawDebug()
@@ -68,6 +83,9 @@ GuiEvent SingleplayerMatch::updateLogic()
     Vector2 ballPosVec = golfball.getBallPosition();
     buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
 
+    // Update camera logic
+    updateCamera();
+
     //Check is ball has stopped on hole, if so, you won!
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
     {
@@ -78,25 +96,33 @@ GuiEvent SingleplayerMatch::updateLogic()
     //Launch the ball check
     if (golfball.isStopped)
     {
+        // World-space mouse position
+        Vector2 worldMousePos = GetScreenToWorld2D(mouse.position(), camera);
+
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !golfball.isDragging)
         {
-            if (buttonClicked() == 0)
+            // Convert ball world position to screen position
+            Vector2 screenBallPosition = GetWorldToScreen2D(golfball.getBallPosition(), camera);
+
+            // Check if mouse position is inside the ball's screen-space bounds
+            float ballScreenRadius = BALL_RADIUS * camera.zoom; // Scale the radius by zoom level
+            if (CheckCollisionPointCircle(mouse.position(), screenBallPosition, ballScreenRadius))
             {
                 golfball.isDragging = true;
                 golfball.startDrag = golfball.getBallPosition();
-                golfball.currentDrag = {
+                golfball.currentDrag = GetScreenToWorld2D({
                     mouse.position().x / sst::cxf(1),
                     mouse.position().y / sst::cyf(1)
-                };
+                }, camera);
                 golfball.updateVelocity({0,0});
             }
         } 
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
-            golfball.currentDrag = {
+            golfball.currentDrag = GetScreenToWorld2D({
                 mouse.position().x / sst::cxf(1),
                 mouse.position().y / sst::cyf(1)
-            };
+            }, camera);
         }
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
@@ -111,4 +137,83 @@ GuiEvent SingleplayerMatch::updateLogic()
         }
     }
     return Nothing;
+}
+
+void SingleplayerMatch::updateCamera() {
+    // Variables to store the desired target position
+    Vector2 desiredTarget = camera.target;
+
+    // Handle panning controls (camera movement when keys are held down)
+    if (IsKeyDown(KEY_A)) {
+        desiredTarget.x -= sst::cx(100);  // Move camera left (increase speed)
+        cameraShouldFollowBall = false;  // Stop following
+        cameraShouldCenter = false; // Stop center
+    }
+    if (IsKeyDown(KEY_D)) {
+        desiredTarget.x += sst::cx(100);  // Move camera right (increase speed)
+        cameraShouldFollowBall = false;  // Stop following
+        cameraShouldCenter = false; // Stop center
+    }
+    if (IsKeyDown(KEY_W)) {
+        desiredTarget.y -= sst::cy(100);  // Move camera up (increase speed)
+        cameraShouldFollowBall = false;  // Stop following
+        cameraShouldCenter = false; // Stop center
+    }
+    if (IsKeyDown(KEY_S)) {
+        desiredTarget.y += sst::cy(100);  // Move camera down (increase speed)
+        cameraShouldFollowBall = false;  // Stop following
+        cameraShouldCenter = false; // Stop center
+    }
+
+    // Smoothly transition the camera towards the desired target
+    camera.target.x += (desiredTarget.x - camera.target.x) * smoothingFactor;
+    camera.target.y += (desiredTarget.y - camera.target.y) * smoothingFactor;
+
+    // Reset to follow the ball when `KEY_F` is pressed
+    if (IsKeyPressed(KEY_F)) {
+        cameraShouldCenter = false;
+        cameraShouldFollowBall = !cameraShouldFollowBall;
+    }
+
+    // Reset to follow centre when 'KEY_C' is pressed
+    if (IsKeyPressed(KEY_C)) {
+        cameraShouldFollowBall = false;
+        cameraShouldCenter = !cameraShouldCenter;
+    }
+
+    // Camera following ball logic (when `cameraShouldFollowBall` is true)
+    if (cameraShouldFollowBall) {
+        // Get the ball's position (target for the camera)
+        Vector2 targetPosition = {
+            sst::cxf(golfball.getBallPosition().x),
+            sst::cyf(golfball.getBallPosition().y)
+        };
+        // Smoothly move the camera towards the ball's position
+        camera.target.x += (targetPosition.x - camera.target.x) * smoothingFactor;
+        camera.target.y += (targetPosition.y - camera.target.y) * smoothingFactor;
+    }
+
+    // Camera centered (when `cameraShouldCenter` is true)
+    if (cameraShouldCenter) {
+        Vector2 targetPosition = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)};
+        float targetZoom = 1.0f;
+
+        // Smoothly move the camera towards the center position
+        camera.target.x += (targetPosition.x - camera.target.x) * smoothingFactor;
+        camera.target.y += (targetPosition.y - camera.target.y) * smoothingFactor;
+
+        // Default zoom unless scrollwheel moves
+        if(GetMouseWheelMove() != 0) {
+            cameraShouldCenter = false;
+        } else {
+            camera.zoom += (targetZoom - camera.zoom) * smoothingFactor;
+        }
+    }
+
+    // Zoom camera (mouse wheel)
+    camera.zoom += GetMouseWheelMove() * 0.25f;
+
+    // Limit zoom range
+    if (camera.zoom < 0.5f) camera.zoom = 0.5f;
+    if (camera.zoom > 10.0f) camera.zoom = 10.0f;
 }

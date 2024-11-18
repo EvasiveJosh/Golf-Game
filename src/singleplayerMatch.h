@@ -30,6 +30,11 @@ class SingleplayerMatch : public Match
         void draw() override;
         void drawDebug() override;
         GuiEvent updateLogic() override;
+        bool cameraShouldFollowBall;
+        bool cameraShouldCenter;
+        float smoothingFactor;
+        void updateCamera();
+        Camera2D camera;
 };
 
 #endif
