@@ -1,10 +1,10 @@
 #include "program.h"
 
 
-Program::Program()
+Program::Program() : currentMusic()
 {
-    //Required for GUI
     InitWindow(sst::baseX, sst::baseY, "Game");
+
     SetTargetFPS(60);
     end = false;
     SetExitKey(KEY_NULL); //Removes escape as the exit key
@@ -17,6 +17,7 @@ Program::Program()
 
 void Program::close()
 {
+    currentMusic.close();
     CloseWindow(); //Closes the window
 }
 
@@ -24,6 +25,7 @@ void Program::loop()
 {
     while(!end)
     {
+        currentMusic.update();
         
         if (IsKeyPressed(KEY_ESCAPE)) //For testing purposes
             end = true;

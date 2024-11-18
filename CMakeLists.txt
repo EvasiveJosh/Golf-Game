@@ -23,6 +23,7 @@ set(SOURCES
     src/ball.cpp
     src/match.cpp
     src/terrain.cpp
+    src/gameMusic.cpp
 )
 
 set(HEADERS
@@ -43,6 +44,7 @@ set(HEADERS
     src/match.h
     src/terrain.h
     src/raygui.h
+    src/gameMusic.h
 )
 
 add_compile_options(

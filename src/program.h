@@ -16,6 +16,8 @@
 //Actual Game windows
 #include "match.h"
 #include "singleplayerMatch.h"
+//Other includes
+#include "gameMusic.h"
 
 
 class Program
@@ -30,6 +32,7 @@ class Program
         bool inSingleplayerGame;
         bool inMultiplayerGame;
         std::unique_ptr<Match> currentMatch;
+        GameMusic currentMusic;
         
     public:
         Program();
