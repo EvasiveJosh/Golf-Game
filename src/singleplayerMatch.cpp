@@ -84,13 +84,19 @@ GuiEvent SingleplayerMatch::updateLogic()
             {
                 golfball.isDragging = true;
                 golfball.startDrag = golfball.getBallPosition();
-                golfball.currentDrag = mouse.position();
+                golfball.currentDrag = {
+                    mouse.position().x / sst::cxf(1),
+                    mouse.position().y / sst::cyf(1)
+                };
                 golfball.updateVelocity({0,0});
             }
         } 
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
-            golfball.currentDrag = mouse.position();
+            golfball.currentDrag = {
+                mouse.position().x / sst::cxf(1),
+                mouse.position().y / sst::cyf(1)
+            };
         }
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {

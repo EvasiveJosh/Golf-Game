@@ -29,13 +29,18 @@ Ball::Ball(CLITERAL(Color) color)
 
 void Ball::draw()
 {
-    //Draw ball
+    // Draw ball
     DrawCircleV({sst::cxf(ballPosition.x), sst::cyf(ballPosition.y)}, sst::cx(BALL_RADIUS), ballColor);
-    DrawCircleLines(sst::cx(ballPosition.x), sst::cy(ballPosition.y), sst::cx(BALL_RADIUS), BLACK);
+    DrawCircleLines(sst::cxf(ballPosition.x), sst::cyf(ballPosition.y), sst::cx(BALL_RADIUS), BLACK);
 
     // Draw drag line
     if (isDragging) {
-        DrawLineV(startDrag, currentDrag, WHITE);
+        // Scale drag positions appropriately
+        DrawLineV(
+            {sst::cxf(startDrag.x), sst::cyf(startDrag.y)},
+            {sst::cxf(currentDrag.x), sst::cyf(currentDrag.y)},
+            GREEN
+        );
     }
 }
 
@@ -70,11 +75,15 @@ void Ball::updatePhysics()
 
 void Ball::checkCollisions()
 {
-    //Minimum height collision
-    if (ballPosition.y > sst::baseY - GRASS_HEIGHT - BALL_RADIUS) 
+    // Base screen dimensions
+    float screenWidthBase = sst::baseX;
+    float screenHeightBase = sst::baseY;
+
+    // Minimum height collision
+    if (ballPosition.y > screenHeightBase - GRASS_HEIGHT - BALL_RADIUS) 
     {
-        ballPosition.y = sst::baseY - GRASS_HEIGHT - BALL_RADIUS;
-        
+        ballPosition.y = screenHeightBase - GRASS_HEIGHT - BALL_RADIUS;
+
         if (fabs(velocity.y) < STOP_THRESHOLD) 
         {
             velocity.y = 0;
@@ -92,19 +101,12 @@ void Ball::checkCollisions()
     {
         ballPosition.x = BALL_RADIUS;
         velocity.x *= -DAMPING;
-    } else if (ballPosition.x > GetScreenWidth() - BALL_RADIUS) 
+    } 
+    else if (ballPosition.x > screenWidthBase - BALL_RADIUS) 
     {
-        ballPosition.x = GetScreenWidth() - BALL_RADIUS;
+        ballPosition.x = screenWidthBase - BALL_RADIUS;
         velocity.x *= -DAMPING;
     }
-
-    // //Goes backwards (illegal)
-    // if (ballPosition.x < BALL_RADIUS) 
-    // {
-    //     isOutOfBounds = true;
-    // }
-
-    // //I'll leave the case where it overshoots out incase of camera movement
 
     // Top wall collision
     if (ballPosition.y < BALL_RADIUS) 
