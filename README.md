@@ -1,3 +1,8 @@
+# TODO
+
+1. Fix the volume slider, so that when you enter general settings menu, volume is set to what the current volume level is
+
+
 # Golf-Game
 
 Welcome to the golfgame code!

@@ -48,6 +48,8 @@ GeneralSettingsMenu::GeneralSettingsMenu() : Menu()
     }
     //Determine which resolutions are not supported on main monitor
 
+    //Default volume level
+    volumeLevel = 1.0f;
 
 }
 
@@ -62,6 +64,15 @@ void GeneralSettingsMenu::draw()
     DrawText(text.c_str(), sst::cx(centerTextX(text.c_str(), font)), sst::cy(10), sst::cx(font), BLACK);
     text = "Back";
     DrawText(text.c_str(), sst::cx(sst::baseX - MeasureText(text.c_str(), font) - 10), sst::cy(10), sst::cx(font), buttons[0].isHovered(mouse) ? RED : BLACK);
+    
+    //Volume Slider
+    text = "Volume:";
+    DrawText(text.c_str(), sst::cx(10), sst::cy(centerTextY(text.c_str(), font)) - sst::cy(font + 200), sst::cx(font), BLACK);
+    float temp = volumeLevel;
+    GuiSlider((Rectangle){sst::cxf(100), sst::cyf(centerTextY(text.c_str(), font)) - sst::cyf(font + 100), sst::cxf(1000), sst::cyf(40)}, "", "", &temp, 0.0f, 1.0f);
+    volumeLevel = temp;
+
+    //Resolution
     text = "Resolution:";
     DrawText(text.c_str(), sst::cx(10), sst::cy(centerTextY(text.c_str(), font)) - sst::cy(font + 20), sst::cx(font), BLACK);
     font = 50;
@@ -124,5 +135,10 @@ GuiEvent GeneralSettingsMenu::updateMenuLogic()
                 break;
         }
     }
-    return Nothing;
+    return SetVolume;
+}
+
+const float& GeneralSettingsMenu::getVolumeLevel()
+{
+    return volumeLevel;
 }

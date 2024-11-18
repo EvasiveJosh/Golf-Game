@@ -5,11 +5,16 @@ GameMusic::GameMusic()
     InitAudioDevice();
     currentMusic = std::make_unique<Music>(LoadMusicStream("resources/tempMusic.mp3"));
     PlayMusicStream(*currentMusic);
+    volumeLevel = 1.0f;
 }
 
 void GameMusic::update()
 {
-    UpdateMusicStream(*currentMusic); //Update music stream with music data
+    if (currentMusic)
+    {
+        UpdateMusicStream(*currentMusic); //Update music stream with music data
+        SetMusicVolume(*currentMusic, volumeLevel);
+    }
 }
 
 void GameMusic::change(const std::string& musicFilePath)
@@ -31,4 +36,14 @@ void GameMusic::close()
     if (currentMusic)
         currentMusic.reset();
     CloseAudioDevice();
+}
+
+const float& GameMusic::getVolumeLevel()
+{
+    return volumeLevel;
+}
+
+void GameMusic::setVolumeLevel(const float& newVolumeLevel)
+{
+    volumeLevel = newVolumeLevel;
 }

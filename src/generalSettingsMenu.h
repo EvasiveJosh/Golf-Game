@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "menu.h"
+#include "raygui.h"
 
 enum GeneralSettingsMenuButton
 {
@@ -19,11 +20,14 @@ class GeneralSettingsMenu : public Menu
     private:
         //Assuming 16:9 aspect ratio
         bool currentResolution[5];
+        //For volume
+        float volumeLevel;
     public:
         GeneralSettingsMenu();
         void draw() override;
         GuiEvent updateMenuLogic() override;
         void drawDebug() override;
+        const float& getVolumeLevel() override;
 };
 
 #endif

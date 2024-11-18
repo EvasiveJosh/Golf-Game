@@ -10,7 +10,7 @@ Program::Program() : currentMusic()
     SetExitKey(KEY_NULL); //Removes escape as the exit key
     debug = false;
     //Initializes starting menu
-    currentMenu = std::make_unique<StartMenu>();
+    currentMenu = std::make_unique<GeneralSettingsMenu>();
     inSingleplayerGame = false;
     bool inMultiplayerGame = false;
 }
@@ -116,10 +116,13 @@ void Program::updateLogic(GuiEvent state)
             break;
 
         case StartSingleplayerGame:
-            std::vector<int> info = this->currentMenu->getInformation();
             inSingleplayerGame = true;
+            currentMatch = std::make_unique<SingleplayerMatch>(this->currentMenu->getInformation());
             currentMenu = nullptr;
-            currentMatch = std::make_unique<SingleplayerMatch>(info[0], info[1], !info[2]);
+            break;
+        
+        case SetVolume:
+            currentMusic.setVolumeLevel(currentMenu->getVolumeLevel());
             break;
         
     }

@@ -24,7 +24,8 @@ enum GuiEvent
     screenSizeTo3840p,
     TryJoinMultiplayerGame,
     OpenSingleplayerGameSettingsMenu,
-    StartSingleplayerGame
+    StartSingleplayerGame,
+    SetVolume
 };
 
 #endif

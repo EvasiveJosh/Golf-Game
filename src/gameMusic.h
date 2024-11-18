@@ -6,6 +6,7 @@ class GameMusic
 {
     private:
         std::unique_ptr<Music> currentMusic;
+        float volumeLevel;
     public:
         //Loads default starting music
         GameMusic();
@@ -15,4 +16,8 @@ class GameMusic
         void change(const std::string& musicFilePath);
         //Properly closes music (should only be called in program.close)
         void close();
+        //return volumeLevel
+        const float& getVolumeLevel();
+        //sets volumeLevel
+        void setVolumeLevel(const float& newVolumeLevel);
 };

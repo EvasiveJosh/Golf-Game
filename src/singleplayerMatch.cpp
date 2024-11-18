@@ -1,11 +1,11 @@
 #include "singleplayerMatch.h"
 
-SingleplayerMatch::SingleplayerMatch(int difficulty, int wind, bool endlessMode)
+SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
 {
     //Settings for the match, so far serve no purpose
-    this->difficulty = difficulty;
-    this->wind = wind;
-    this->endlessMode = endlessMode;
+    this->difficulty = info[0];
+    this->wind = info[1];
+    this->endlessMode = !info[2];
     end = false;
     Terrain terrainGenerator;
     std::vector<TerrainSquare> terrain = terrainGenerator.DrawTerrain(difficulty);

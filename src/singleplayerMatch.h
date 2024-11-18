@@ -25,7 +25,7 @@ class SingleplayerMatch : public Match
     private:
         std::vector<TerrainSquare> terrain;
     public:
-        SingleplayerMatch(int difficulty, int wind, bool endlessMode);
+        SingleplayerMatch(std::vector<int> info);
         void draw() override;
         void drawDebug() override;
         GuiEvent updateLogic() override;
