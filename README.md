@@ -2,6 +2,13 @@
 
 1. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
 2. Overhaul the screen settings to use the new userSettings class
+3. the "singleplayerWinMenu.h" and "singleplayerWinMenu.cpp" needs to be implemented.
+        This menu will run once the player has put the ball in the hole. Should give them the option to restart or return to main menu
+        Feel free to make it a non inherited class. Because it should display the shot count, which is stored in "singleplayerMatch" and
+        I am unsure if there is an easy way to send that data to the inherited menu class.
+4. A pause menu for singleplayer needs to be implemented (the files need to be created)
+        This menu should be inherited from the "Menu" class. The menu should also PAUSE the game and should give them the option to return to
+        the StartMenu or to resume.
 
 
 # Golf-Game
