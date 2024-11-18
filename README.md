@@ -2,6 +2,8 @@
 
 1. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
 2. Overhaul the screen settings to use the new userSettings class
+3. singleplayerWinMenu needs to be implemented
+4. A pause menu for singleplayer needs to be implemented
 
 
 # Golf-Game
