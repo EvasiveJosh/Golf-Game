@@ -24,6 +24,7 @@ set(SOURCES
     src/match.cpp
     src/terrain.cpp
     src/gameMusic.cpp
+    src/userSettings.cpp
 )
 
 set(HEADERS
@@ -45,6 +46,7 @@ set(HEADERS
     src/terrain.h
     src/raygui.h
     src/gameMusic.h
+    src/userSettings.h
 )
 
 add_compile_options(

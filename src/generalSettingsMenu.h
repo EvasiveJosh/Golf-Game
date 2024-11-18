@@ -4,6 +4,7 @@
 #include <iostream>
 #include "menu.h"
 #include "raygui.h"
+#include "userSettings.h"
 
 enum GeneralSettingsMenuButton
 {
@@ -23,7 +24,7 @@ class GeneralSettingsMenu : public Menu
         //For volume
         float volumeLevel;
     public:
-        GeneralSettingsMenu();
+        GeneralSettingsMenu(userSettings* settings);
         void draw() override;
         GuiEvent updateMenuLogic() override;
         void drawDebug() override;
