@@ -1,14 +1,33 @@
 # TODO
+1. Ball (Thomas)
+        - Ball needs an overhaul. A physics engine needs to be created seperate from ball. 
+        - Collision will be done inside the physics engine
 
-1. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
-2. Overhaul the screen settings to use the new userSettings class
-3. the "singleplayerWinMenu.h" and "singleplayerWinMenu.cpp" needs to be implemented.
-        This menu will run once the player has put the ball in the hole. Should give them the option to restart or return to main menu
-        Feel free to make it a non inherited class. Because it should display the shot count, which is stored in "singleplayerMatch" and
-        I am unsure if there is an easy way to send that data to the inherited menu class.
-4. A pause menu for singleplayer needs to be implemented (the files need to be created)
-        This menu should be inherited from the "Menu" class. The menu should also PAUSE the game and should give them the option to return to
-        the StartMenu or to resume.
+        Nobody touch ball.cpp and ball.h
+3. Singleplayer
+        - When RESTART is selected, the difficulty, wind and endless mode of previous match are not carried over, they need to be.
+4. Multiplayer (Thomas)
+        - Singplayer class but with things added (so real)
+5. Menu
+        - Settings menu needs careful consideration. 
+        - Do not store screen resolutions anywhere
+        - HostMenu
+        - Kian needs to fix joinMultiplayerMenu (Add box for IP)
+6. General
+        - Logic updates should be moves after EndDrawing() (to avoid conflicts with draw and drawDebug)
+        - Find better music for the game
+        - Overhaul Project organization
+                - Headers in one file
+                - Cpp is another
+                - Update CMAKE
+7. Terrain
+        - Bound the random terrain between the starting ball position and the flag
+        - Collisions for terrain
+        - Please rename DrawTerrain, it literally does NOT DRAW THE TERRAIN
+8. Camera 
+        - Make option for it to center on the ball (just use position of ball)
+        - Debug view needs to be overhauled. It needs to stay put when the camera moves (rn it moves with the camera)
+
 
 
 # Golf-Game

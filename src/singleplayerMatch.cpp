@@ -63,7 +63,7 @@ void SingleplayerMatch::draw()
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
         int width = square.getWidth();
-        DrawRectangle(posX, yPos, width, square.getHeight(), GREEN); // Call the draw method for each square
+        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width), sst::cyf(square.getHeight()), GREEN); // Call the draw method for each square
     }
     // Draw other elements (e.g., golfball)
     golfball.draw();

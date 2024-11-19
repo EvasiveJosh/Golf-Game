@@ -66,10 +66,6 @@ void Program::loop()
 
         EndDrawing();
 
-        // if (!inSingleplayerGame && !inMultiplayerGame)
-        //     updateLogic(currentMenu->updateMenuLogic()); //Compute new state for menu
-        // if (inSingleplayerGame)
-        //     updateLogic(currentMatch->updateLogic()); //Compute new state for sp match
     }
 }
 
