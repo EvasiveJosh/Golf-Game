@@ -8,7 +8,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
     this->endlessMode = !info[2];
     end = false;
     Terrain terrainGenerator;
-    std::vector<TerrainSquare> terrain = terrainGenerator.DrawTerrain(difficulty);
+    terrain = terrainGenerator.DrawTerrain(difficulty);
     //Load mouse
     mouse = Mouse();
     //Load golfball
@@ -48,8 +48,8 @@ void SingleplayerMatch::draw()
     // Start using camera
     BeginMode2D(camera);
 
-    // //Draw some default terrain
-    // DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+    //base terrain
+    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
 
     DrawCircle(10,10,3,RED);
     //Draw some default sky
@@ -57,8 +57,12 @@ void SingleplayerMatch::draw()
     //Draw flag
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
+    //draw each terrain segment
     for (const TerrainSquare& square : terrain) {
-        DrawRectangle(square.getPosX(), sst::baseY - square.getHeight(), square.getWidth(), square.getHeight(), GREEN);
+        int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
+        int posX = square.getPosX();
+        int width = square.getWidth();
+        DrawRectangle(posX, yPos, width, square.getHeight(), GREEN); // Call the draw method for each square
     }
     // Draw other elements (e.g., golfball)
     golfball.draw();

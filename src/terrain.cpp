@@ -27,22 +27,24 @@ int TerrainSquare::getWidth() const{
 }
 
 vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
+    Ball golfball;
+    Vector2 ballPosVec = golfball.getBallPosition();
     int levelSize = 0;
     if(difficulty == 0){ //difficulty easy
-        levelSize = 2;
+        levelSize = 8;
     }
     else if(difficulty == 1){ //difficulty medium
-        levelSize = 4;
+        levelSize = 10;
     }
     else{ //difficulty hard
-        levelSize = 6;
+        levelSize = 12;
     }
-    int x = 0;
+    int x = sst::cx(ballPosVec.x+50);
     vector<TerrainSquare> terrain; //vector that holds the segment objects
     srand(time(0));
     for(int i = 0; i<levelSize ;i++){
-        int randomHeight = rand() % 40 + 10; // Increased height range for visibility
-        int width = 15;
+        int randomHeight = rand() % 150 + 30;
+        int width = 100;
         TerrainSquare temp(randomHeight,x,width,i+1);
         terrain.push_back(temp);
         x += width;
