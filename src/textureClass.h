@@ -11,9 +11,7 @@ enum ImageFinder
 {
     Background_M,
     PixelFlag
-    // WhiteBall - Not used yet, planning on using a png for ball 
-    // ball coloring for custom png may be tint, or may be different textures
-    // I can make colored balls or special designs using Aseprite
+    // WhiteBall
 };
 
 class TextureClass

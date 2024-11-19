@@ -38,38 +38,24 @@ void Program::loop()
             ClearBackground(RAYWHITE);
 
 
-        if (!inSingleplayerGame && !inMultiplayerGame)
-        {
-            currentMenu->draw();
-            if (debug)
-                currentMenu->drawDebug();
-        }
-
-        if (inSingleplayerGame) {
-            if (currentMatch) {
-                currentMatch->draw(); // Always draw the game
-
-                if (currentMenu) { // If a menu is active, draw it on top
-                    currentMenu->draw();
-                    updateLogic(currentMenu->updateMenuLogic());
-                } else { // If no menu, update game logic
-                    updateLogic(currentMatch->updateLogic());
-                }
-
+            if (!inSingleplayerGame && !inMultiplayerGame)
+            {
+                currentMenu->draw();
+                if (debug)
+                    currentMenu->drawDebug();
+            }
+            if (inSingleplayerGame)
+            {
+                currentMatch->draw();
                 if (debug)
                     currentMatch->drawDebug();
             }
-        } else if (currentMenu) {
-            currentMenu->draw();
-            updateLogic(currentMenu->updateMenuLogic());
-        }
 
         EndDrawing();
-
         if (!inSingleplayerGame && !inMultiplayerGame)
-            updateLogic(currentMenu->updateMenuLogic()); // Compute new state for menu
-        if (inSingleplayerGame && currentMatch)
-            updateLogic(currentMatch->updateLogic()); // Compute new state for sp match
+            updateLogic(currentMenu->updateMenuLogic()); //Compute new state for menu
+        if (inSingleplayerGame)
+            updateLogic(currentMatch->updateLogic()); //Compute new state for sp match
     }
 }
 
@@ -142,28 +128,14 @@ void Program::updateLogic(GuiEvent state)
             break;
 
         case OpenSingleplayerWinMenu:
-            if (inSingleplayerGame) {
+            if (inSingleplayerGame)
+            {
                 int shotCount = dynamic_cast<SingleplayerMatch*>(currentMatch.get())->getShotCount();
-                currentMatch = nullptr; // Ensure currentMatch is set to nullptr
+                currentMatch = nullptr;
                 inSingleplayerGame = false;
                 this->currentMenu = std::make_unique<SingleplayerWinMenu>(shotCount);
             }
             break;
-
-        case PauseGame:
-            if (inSingleplayerGame && !currentMenu)
-            {
-                currentMenu = std::make_unique<SingleplayerPauseMenu>();
-                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->pause(); // Pause the game
-            }
-            break;
-
-        case ResumeGame:
-            if (currentMenu && dynamic_cast<SingleplayerPauseMenu*>(currentMenu.get()))
-            {
-                currentMenu = nullptr; // Remove the pause menu
-                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->resume(); // Resume the game
-            }
-            break;
+        
     }
 }

@@ -26,15 +26,11 @@ class SingleplayerMatch : public Match
         std::vector<TerrainSquare> terrain;
         TextureClass flag;
         Ball golfball;
-        bool isPaused;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;
         void drawDebug() override;
         GuiEvent updateLogic() override;
-        void togglePause();
-        void pause();
-        void resume();
         bool cameraShouldFollowBall;
         bool cameraShouldCenter;
         float smoothingFactor;

@@ -2,7 +2,7 @@
 
 1. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
 2. Overhaul the screen settings to use the new userSettings class
-3. (COMPLETED) the "singleplayerWinMenu.h" and "singleplayerWinMenu.cpp" needs to be implemented.
+3. the "singleplayerWinMenu.h" and "singleplayerWinMenu.cpp" needs to be implemented.
         This menu will run once the player has put the ball in the hole. Should give them the option to restart or return to main menu
         Feel free to make it a non inherited class. Because it should display the shot count, which is stored in "singleplayerMatch" and
         I am unsure if there is an easy way to send that data to the inherited menu class.
