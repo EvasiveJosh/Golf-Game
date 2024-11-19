@@ -20,7 +20,7 @@
 //Other includes
 #include "gameMusic.h"
 #include "userSettings.h"
-
+#include "window.h"
 
 
 class Program
@@ -37,6 +37,7 @@ class Program
         std::unique_ptr<Match> currentMatch;
         GameMusic currentMusic;
         userSettings settings;
+        Window window;
         
     public:
         Program();

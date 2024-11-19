@@ -25,29 +25,29 @@ GeneralSettingsMenu::GeneralSettingsMenu(userSettings* settings) : Menu()
     text = "3840p"; 
     addButton(text.c_str(), font, 30+4*214, centerTextY(text.c_str(), font));
 
-    //Detect current screen size
-    for (int i = 0; i < 5; i++)
-        currentResolution[i] = false;
-    switch(GetScreenHeight())
+    
+
+    //Detect current resolution
+    switch(settings->getResolution())
     {
-        case 480:
+        case _480P:
             currentResolution[0] = true;
             break;
-        case 720:
+        case _720P:
             currentResolution[1] = true;
             break;
-        case 1080:
+        case _1080P:
             currentResolution[2] = true;
             break;
-        case 1440:
+        case _1440P:
             currentResolution[3] = true;
             break;
-        case 2160:
+        case _3840P:
             currentResolution[4] = true;
             break;
     }
     //Determine which resolutions are not supported on main monitor
-
+    
     //Default volume level
     volumeLevel = settings->getVolume();
 
