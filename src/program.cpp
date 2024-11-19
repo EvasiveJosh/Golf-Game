@@ -3,14 +3,16 @@
 
 Program::Program() : currentMusic(), settings()
 {
-    this->window.start();
+    InitWindow(sst::baseX, sst::baseY, "Game");
+
+    SetTargetFPS(60);
     end = false;
     SetExitKey(KEY_NULL); //Removes escape as the exit key
     debug = false;
     //Initializes starting menu
     currentMenu = std::make_unique<StartMenu>();
     inSingleplayerGame = false;
-    inMultiplayerGame = false;
+    bool inMultiplayerGame = false;
 
 }
 
@@ -25,15 +27,16 @@ void Program::loop()
     while(!end)
     {
         currentMusic.update();
-
+        
         if (IsKeyPressed(KEY_ESCAPE)) //For testing purposes
             end = true;
         
         if (IsKeyPressed(KEY_P))
             debug = !debug;
-
+        
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+            ClearBackground(RAYWHITE);
+
 
             if (!inSingleplayerGame && !inMultiplayerGame)
             {
@@ -83,21 +86,22 @@ void Program::updateLogic(GuiEvent state)
             this->currentMenu = std::make_unique<JoinMultiplayerMenu>();
             break;
         case screenSizeTo480p:
-            this->window.changeSize(854, 480);
-            this->settings.setResolution(_480P);
+            SetWindowSize(854, 480);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 854/2, GetMonitorHeight(0)/2 - 480/2); 
             this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo720p:
-            this->window.changeSize(1280, 720);
-            this->settings.setResolution(_720P);
+            SetWindowSize(1280, 720);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 1280/2, GetMonitorHeight(0)/2 - 720/2); 
             this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1080p:
-            this->window.changeSize(1920, 1080);
-            this->settings.setResolution(_1080P);
+            SetWindowSize(1920, 1080);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 1920/2, GetMonitorHeight(0)/2 - 1080/2);
             this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1440p:
+            
             break;
         case screenSizeTo3840p:
             
