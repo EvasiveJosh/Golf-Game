@@ -144,5 +144,8 @@ void Ball::updateVelocity(Vector2 newVel)
     velocity = newVel;
 }
 
-
+int Ball::getShotCount() const
+{
+    return shotCount;
+}
 

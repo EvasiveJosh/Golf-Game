@@ -13,6 +13,7 @@
 #include "multiplayerMenu.h"
 #include "joinMultiplayerMenu.h"
 #include "singleplayerGameSettingsMenu.h"
+#include "singleplayerWinMenu.h"
 //Actual Game windows
 #include "match.h"
 #include "singleplayerMatch.h"

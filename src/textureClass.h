@@ -11,6 +11,7 @@ enum ImageFinder
 {
     Background_M,
     PixelFlag
+    // WhiteBall
 };
 
 class TextureClass

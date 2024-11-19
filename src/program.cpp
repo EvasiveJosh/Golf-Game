@@ -126,6 +126,16 @@ void Program::updateLogic(GuiEvent state)
             this->settings.setVolume(currentMenu->getVolumeLevel());
             currentMusic.setVolumeLevel(this->settings.getVolume());
             break;
+
+        case OpenSingleplayerWinMenu:
+            if (inSingleplayerGame)
+            {
+                int shotCount = dynamic_cast<SingleplayerMatch*>(currentMatch.get())->getShotCount();
+                currentMatch = nullptr;
+                inSingleplayerGame = false;
+                this->currentMenu = std::make_unique<SingleplayerWinMenu>(shotCount);
+            }
+            break;
         
     }
 }

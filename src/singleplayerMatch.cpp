@@ -13,16 +13,24 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
     mouse = Mouse();
     //Load golfball
     golfball = Ball(WHITE);
+    // To align hole png and hitbox, flag image is basex - 98, hole box is basex -169,
+    // so flag image must be -71 more than hole to align assuming the flag scale is not changed.
+    // For the y axis, the hole is -10, the flag is -189 to align. So the flag image must
+    // be -179 more than the hole.
+
+    // TODO: When implementing the hole with terrain generation, a larger than ball sized gap in the
+    // terrain will be needed to allow the ball to fall into the hole. This will allow for proper hit detection.
+    // When this happens, the hole hitbox will need to be lowered below the flag image.
 
     //Create golfballButton
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
-    addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying
+    addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying (I modified this see note above - Gabriel)
 
     //Load flag
     flag.loadImage("resources", PixelFlag); //Get flag
-    flag.rescale((int)sst::cxf(100 * 0.317f), sst::cy(100)); //Rescale background to fit windowSize
+    flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
     flag.loadTexture(); //Load the image into a texture
 
     // Initialize camera
@@ -47,7 +55,7 @@ void SingleplayerMatch::draw()
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
     //Draw flag
-    DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 119), sst::cy(sst::baseY - GRASS_HEIGHT - 100 + 2), WHITE); //Do not modify without notifying
+    DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     for (const TerrainSquare& square : terrain) {
         DrawRectangle(square.getPosX(), sst::baseY - square.getHeight(), square.getWidth(), square.getHeight(), GREEN);
@@ -90,7 +98,7 @@ GuiEvent SingleplayerMatch::updateLogic()
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
     {
         end = true;
-        return OpenStartingMenu; //To be changed
+        return OpenSingleplayerWinMenu;
     }
 
     //Launch the ball check
@@ -216,4 +224,9 @@ void SingleplayerMatch::updateCamera() {
     // Limit zoom range
     if (camera.zoom < 0.5f) camera.zoom = 0.5f;
     if (camera.zoom > 10.0f) camera.zoom = 10.0f;
+}
+
+int SingleplayerMatch::getShotCount() const 
+{
+    return golfball.getShotCount();
 }

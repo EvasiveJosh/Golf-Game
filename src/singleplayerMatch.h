@@ -25,6 +25,7 @@ class SingleplayerMatch : public Match
     private:
         std::vector<TerrainSquare> terrain;
         TextureClass flag;
+        Ball golfball;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;
@@ -35,6 +36,7 @@ class SingleplayerMatch : public Match
         float smoothingFactor;
         void updateCamera();
         Camera2D camera;
+        int getShotCount() const;
 };
 
 #endif

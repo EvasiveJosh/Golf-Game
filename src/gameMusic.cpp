@@ -5,7 +5,7 @@ GameMusic::GameMusic()
     InitAudioDevice();
     currentMusic = std::make_unique<Music>(LoadMusicStream("resources/tempMusic.mp3"));
     PlayMusicStream(*currentMusic);
-    volumeLevel = 1.0f;
+    volumeLevel = 0.0f; // Set default volume to 0 for repeat testing, remember to change before release
 }
 
 void GameMusic::update()

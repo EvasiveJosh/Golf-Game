@@ -25,7 +25,8 @@ enum GuiEvent
     TryJoinMultiplayerGame,
     OpenSingleplayerGameSettingsMenu,
     StartSingleplayerGame,
-    SetVolume
+    SetVolume,
+    OpenSingleplayerWinMenu
 };
 
 #endif
