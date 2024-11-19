@@ -71,10 +71,11 @@ void Program::loop()
         }
 
         EndDrawing();
-        if (!inSingleplayerGame && !inMultiplayerGame)
-            updateLogic(currentMenu->updateMenuLogic()); //Compute new state for menu
-        if (inSingleplayerGame)
-            updateLogic(currentMatch->updateLogic()); //Compute new state for sp match
+
+        // if (!inSingleplayerGame && !inMultiplayerGame)
+        //     updateLogic(currentMenu->updateMenuLogic()); //Compute new state for menu
+        // if (inSingleplayerGame)
+        //     updateLogic(currentMatch->updateLogic()); //Compute new state for sp match
     }
 }
 
@@ -158,18 +159,14 @@ void Program::updateLogic(GuiEvent state)
         
         case PauseGame:
             if (inSingleplayerGame && !currentMenu)
-            {
                 currentMenu = std::make_unique<SingleplayerPauseMenu>();
-                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->pause(); // Pause the game
-            }
             break;
 
         case ResumeGame:
-            if (currentMenu && dynamic_cast<SingleplayerPauseMenu*>(currentMenu.get()))
-            {
-                currentMenu = nullptr; // Remove the pause menu
-                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->resume(); // Resume the game
-            }
+            currentMenu = nullptr; // Remove the pause menu
+
+            if (inSingleplayerGame)
+                currentMatch->resume();
             break;
         
     }

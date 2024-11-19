@@ -33,6 +33,8 @@ class Match
         virtual GuiEvent updateLogic() = 0;
         //Draws the mouse and buttons hitboxes to the screen.
         virtual void drawDebug() = 0;
+        //Resumes the game
+        virtual void resume() = 0;
 
         //Adds a button based off text
         void addButton(const std::string& label, int font, int posX, int posY);

@@ -92,21 +92,21 @@ GuiEvent SingleplayerMatch::updateLogic()
 {   
     if (IsKeyPressed(KEY_GRAVE)) // Use grave key as the pause hotkey
     {
-        togglePause();
+        isPaused = !isPaused;
         return isPaused ? PauseGame : ResumeGame;
     }
 
     if (isPaused)
         return Nothing;
     
-        //General logic to be checked here
-        mouse.updateMousePosition();
-        golfball.updatePhysics();
-        Vector2 ballPosVec = golfball.getBallPosition();
-        buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
+    //General logic to be checked here
+    mouse.updateMousePosition();
+    golfball.updatePhysics();
+    Vector2 ballPosVec = golfball.getBallPosition();
+    buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
 
-        // Update camera logic
-        updateCamera();
+    // Update camera logic
+    updateCamera();
 
     //Check is ball has stopped on hole, if so, you won!
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
@@ -160,28 +160,6 @@ GuiEvent SingleplayerMatch::updateLogic()
         }
     }
     return Nothing;
-}
-
-void SingleplayerMatch::togglePause()
-{
-    if (isPaused)
-    {
-        resume();
-    }
-    else
-    {
-        pause();
-    }
-}
-
-void SingleplayerMatch::pause()
-{
-    isPaused = true;
-}
-
-void SingleplayerMatch::resume()
-{
-    isPaused = false;
 }
 
 void SingleplayerMatch::updateCamera() {
@@ -266,4 +244,9 @@ void SingleplayerMatch::updateCamera() {
 int SingleplayerMatch::getShotCount() const 
 {
     return golfball.getShotCount();
+}
+
+void SingleplayerMatch::resume()
+{
+    isPaused = false;
 }
