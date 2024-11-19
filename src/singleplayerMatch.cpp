@@ -1,6 +1,7 @@
 #include "singleplayerMatch.h"
+#include "singleplayerPauseMenu.h"
 
-SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
+SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 {
     //Settings for the match, so far serve no purpose
     this->difficulty = info[0];
@@ -25,9 +26,9 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info)
     //Create golfballButton
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
+
     //Create Hole at ground level at opposite playing side
     addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying (I modified this see note above - Gabriel)
-
     //Load flag
     flag.loadImage("resources", PixelFlag); //Get flag
     flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
@@ -88,20 +89,30 @@ void SingleplayerMatch::drawDebug()
 }
 
 GuiEvent SingleplayerMatch::updateLogic()
-{
-    //General logic to be checked here
-    mouse.updateMousePosition();
-    golfball.updatePhysics();
-    Vector2 ballPosVec = golfball.getBallPosition();
-    buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
+{   
+    if (IsKeyPressed(KEY_GRAVE)) // Use grave key as the pause hotkey
+    {
+        togglePause();
+        return isPaused ? PauseGame : ResumeGame;
+    }
 
-    // Update camera logic
-    updateCamera();
+    if (isPaused)
+        return Nothing;
+    
+        //General logic to be checked here
+        mouse.updateMousePosition();
+        golfball.updatePhysics();
+        Vector2 ballPosVec = golfball.getBallPosition();
+        buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
+
+        // Update camera logic
+        updateCamera();
 
     //Check is ball has stopped on hole, if so, you won!
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
     {
         end = true;
+        // Round is finished, open win menu
         return OpenSingleplayerWinMenu;
     }
 
@@ -149,6 +160,28 @@ GuiEvent SingleplayerMatch::updateLogic()
         }
     }
     return Nothing;
+}
+
+void SingleplayerMatch::togglePause()
+{
+    if (isPaused)
+    {
+        resume();
+    }
+    else
+    {
+        pause();
+    }
+}
+
+void SingleplayerMatch::pause()
+{
+    isPaused = true;
+}
+
+void SingleplayerMatch::resume()
+{
+    isPaused = false;
 }
 
 void SingleplayerMatch::updateCamera() {
