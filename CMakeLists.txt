@@ -26,6 +26,7 @@ set(SOURCES
     src/gameMusic.cpp
     src/userSettings.cpp
     src/singleplayerWinMenu.cpp
+    src/window.cpp
 )
 
 set(HEADERS
@@ -49,6 +50,7 @@ set(HEADERS
     src/gameMusic.h
     src/userSettings.h
     src/singleplayerWinMenu.h
+    src/window.h
 )
 
 add_compile_options(
