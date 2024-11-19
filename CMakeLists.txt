@@ -6,47 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Static linking flags
-add_compile_options(
-    -static 
-    -static-libgcc 
-    -static-libstdc++ 
-    -fsanitize=undefined 
-    -fsanitize-undefined-trap-on-error 
-)
-
-add_link_options(
-    -static 
-    -fsanitize=undefined 
-    -fsanitize-undefined-trap-on-error 
-)
-
-# Fetch raylib using FetchContent
-include(FetchContent)
-
-FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG 5.5
-)
-
-FetchContent_MakeAvailable(raylib)
-
-# Fetch raygui using FetchContent (updated to match raylib)
-FetchContent_Declare(
-    raygui
-    GIT_REPOSITORY https://github.com/raysan5/raygui.git
-    GIT_TAG master
-)
-
-FetchContent_MakeAvailable(raygui)
-
-# Include directories for raylib and raygui
-include_directories(${raylib_SOURCE_DIR}/src)
-include_directories(${raygui_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
-
-# Add sources (do not include header files here)
+# Add sources and headers
 set(SOURCES
     src/main.cpp
     src/program.cpp
@@ -68,7 +28,6 @@ set(SOURCES
     src/singleplayerWinMenu.cpp
 )
 
-# Define headers for inclusion in source files (headers should not be added to SOURCES list)
 set(HEADERS
     src/program.h
     src/ScreenSizeTransfer.h
@@ -86,22 +45,49 @@ set(HEADERS
     src/ball.h
     src/match.h
     src/terrain.h
+    src/raygui.h
     src/gameMusic.h
     src/userSettings.h
     src/singleplayerWinMenu.h
 )
 
-# Create the executable and link raylib and raygui
-add_executable(main ${SOURCES})
+add_compile_options(
+    -static 
+    -static-libgcc 
+    -static-libstdc++ 
+    #Forces the program to crash if undefined behavior occurs (to be removed during release build)
+    -fsanitize=undefined 
+    -fsanitize-undefined-trap-on-error 
+    )
+add_link_options(
+    -static 
+    #Forces the program to crash if undefined behavior occurs (to be removed during release build)
+    -fsanitize=undefined 
+    -fsanitize-undefined-trap-on-error 
+    )
+
+
+# FetchContent to download raylib if not available
+include(FetchContent)
+
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+    GIT_TAG 4.5.0  # Replace with the desired raylib version
+)
+
+FetchContent_MakeAvailable(raylib)
+
+# Create the executable and link raylib
+add_executable(main ${SOURCES} ${HEADERS})
 target_compile_options(main PRIVATE 
     #-Wall -Wextra -pedantic -Werror
-)
+    )
 target_link_libraries(main raylib)
 
-# Add custom target to copy resources (images, etc.) to build directory
 add_custom_target(copyresources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources
     ${CMAKE_BINARY_DIR}/resources
-    COMMENT "Copying resources to the build directory"
+    COMMENT "Copying resources to the build directory" #folder that has the images
 )
