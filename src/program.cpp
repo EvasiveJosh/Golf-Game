@@ -36,19 +36,14 @@ void Program::loop()
         
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        
-        if (!inSingleplayerGame && !inMultiplayerGame)
-        {
-            currentMenu->draw();
-            if (debug)
-                currentMenu->drawDebug();
-        }
 
         if (inSingleplayerGame)
         {
             if (currentMatch)
             {
                 currentMatch->draw(); // Always draw the game
+                if (debug)
+                    currentMatch->drawDebug();
 
                 if (currentMenu) // If a menu is active, draw it on top
                 {
@@ -59,14 +54,13 @@ void Program::loop()
                 {
                     updateLogic(currentMatch->updateLogic());
                 }
-
-                if (debug)
-                    currentMatch->drawDebug();
             }
         }
         else if (currentMenu)
         {
             currentMenu->draw();
+            if (debug)
+                currentMenu->drawDebug();
             updateLogic(currentMenu->updateMenuLogic());
         }
 
