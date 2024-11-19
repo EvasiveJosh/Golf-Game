@@ -26,7 +26,9 @@ enum GuiEvent
     OpenSingleplayerGameSettingsMenu,
     StartSingleplayerGame,
     SetVolume,
-    OpenSingleplayerWinMenu
+    OpenSingleplayerWinMenu,
+    PauseGame,
+    ResumeGame
 };
 
 #endif

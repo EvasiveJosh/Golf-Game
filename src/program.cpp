@@ -24,32 +24,51 @@ void Program::close()
 
 void Program::loop()
 {
-    while(!end)
+    while (!end)
     {
         currentMusic.update();
         
-        if (IsKeyPressed(KEY_ESCAPE)) //For testing purposes
+        if (IsKeyPressed(KEY_ESCAPE)) // For testing purposes
             end = true;
         
         if (IsKeyPressed(KEY_P))
             debug = !debug;
         
         BeginDrawing();
-            ClearBackground(RAYWHITE);
+        ClearBackground(RAYWHITE);
+        
+        if (!inSingleplayerGame && !inMultiplayerGame)
+        {
+            currentMenu->draw();
+            if (debug)
+                currentMenu->drawDebug();
+        }
 
+        if (inSingleplayerGame)
+        {
+            if (currentMatch)
+            {
+                currentMatch->draw(); // Always draw the game
 
-            if (!inSingleplayerGame && !inMultiplayerGame)
-            {
-                currentMenu->draw();
-                if (debug)
-                    currentMenu->drawDebug();
-            }
-            if (inSingleplayerGame)
-            {
-                currentMatch->draw();
+                if (currentMenu) // If a menu is active, draw it on top
+                {
+                    currentMenu->draw();
+                    updateLogic(currentMenu->updateMenuLogic());
+                }
+                else // If no menu, update game logic
+                {
+                    updateLogic(currentMatch->updateLogic());
+                }
+
                 if (debug)
                     currentMatch->drawDebug();
             }
+        }
+        else if (currentMenu)
+        {
+            currentMenu->draw();
+            updateLogic(currentMenu->updateMenuLogic());
+        }
 
         EndDrawing();
         if (!inSingleplayerGame && !inMultiplayerGame)
@@ -134,6 +153,22 @@ void Program::updateLogic(GuiEvent state)
                 currentMatch = nullptr;
                 inSingleplayerGame = false;
                 this->currentMenu = std::make_unique<SingleplayerWinMenu>(shotCount);
+            }
+            break;
+        
+        case PauseGame:
+            if (inSingleplayerGame && !currentMenu)
+            {
+                currentMenu = std::make_unique<SingleplayerPauseMenu>();
+                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->pause(); // Pause the game
+            }
+            break;
+
+        case ResumeGame:
+            if (currentMenu && dynamic_cast<SingleplayerPauseMenu*>(currentMenu.get()))
+            {
+                currentMenu = nullptr; // Remove the pause menu
+                dynamic_cast<SingleplayerMatch*>(currentMatch.get())->resume(); // Resume the game
             }
             break;
         
