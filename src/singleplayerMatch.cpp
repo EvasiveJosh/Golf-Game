@@ -59,14 +59,14 @@ void SingleplayerMatch::draw()
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
-    /*
+    
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
         int width = square.getWidth();
         DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
     }
-    */
+    
     // Draw other elements (e.g., golfball)
     golfball.draw();
 
