@@ -111,10 +111,14 @@ void Program::updateLogic(GuiEvent state)
             this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1440p:
-            
+            SetWindowSize(2560, 1440);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 2560/2, GetMonitorHeight(0)/2 - 1440/2);
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo3840p:
-            
+            SetWindowSize(3840, 2160);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 3840/2, GetMonitorHeight(0)/2 - 2160/2);
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case TryJoinMultiplayerGame:
             username = this->currentMenu->getUserName(); //TODO, ensure no empty string can be returned...

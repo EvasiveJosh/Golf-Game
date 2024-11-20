@@ -46,7 +46,17 @@ GeneralSettingsMenu::GeneralSettingsMenu(userSettings* settings) : Menu()
             currentResolution[4] = true;
             break;
     }
-    //Determine which resolutions are not supported on main monitor
+    //Determine which resolutions are not supported on main monitor (assume 720p and 480p are supported)
+    for (int i = 0; i < 5; i++)
+        allowedResolution[i] = true;
+
+    int monitorHeightCheck = GetMonitorHeight(0);
+    if (monitorHeightCheck < 1080)
+        allowedResolution[2] = false;
+    if (monitorHeightCheck < 1440)
+        allowedResolution[3] = false;
+    if (monitorHeightCheck < 2160)
+        allowedResolution[4] = false;
 
     //Default volume level
     volumeLevel = settings->getVolume();
@@ -77,15 +87,24 @@ void GeneralSettingsMenu::draw()
     DrawText(text.c_str(), sst::cx(10), sst::cy(centerTextY(text.c_str(), font)) - sst::cy(font + 20), sst::cx(font), BLACK);
     font = 50;
     text = "480p";
-    DrawText(text.c_str(), sst::cx(30+0*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[0] ? BLUE : (buttons[1].isHovered(mouse) ? RED : BLACK));
+    DrawText(text.c_str(), sst::cx(30+0*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[0] ? BLUE : (allowedResolution[0] ? (buttons[1].isHovered(mouse) ? RED : BLACK) : BLACK));
     text = "720p";
-    DrawText(text.c_str(), sst::cx(30+1*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[1] ? BLUE : (buttons[2].isHovered(mouse) ? RED : BLACK));
+    DrawText(text.c_str(), sst::cx(30+1*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[1] ? BLUE : (allowedResolution[1] ? (buttons[2].isHovered(mouse) ? RED : BLACK) : BLACK));
     text = "1080p";
-    DrawText(text.c_str(), sst::cx(30+2*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[2] ? BLUE : (buttons[3].isHovered(mouse) ? RED : BLACK));
+    DrawText(text.c_str(), sst::cx(30+2*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[2] ? BLUE : (allowedResolution[2] ? (buttons[3].isHovered(mouse) ? RED : BLACK) : BLACK));
     text = "1440p";
-    DrawText(text.c_str(), sst::cx(30+3*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[3] ? BLUE : (buttons[4].isHovered(mouse) ? RED : BLACK));
+    DrawText(text.c_str(), sst::cx(30+3*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[3] ? BLUE : (allowedResolution[3] ? (buttons[4].isHovered(mouse) ? RED : BLACK) : BLACK));
     text = "3840p";
-    DrawText(text.c_str(), sst::cx(30+4*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[4] ? BLUE : (buttons[5].isHovered(mouse) ? RED : BLACK)); 
+    DrawText(text.c_str(), sst::cx(30+4*214), sst::cy(centerTextY(text.c_str(), font)), sst::cx(font), currentResolution[4] ? BLUE : (allowedResolution[4] ? (buttons[5].isHovered(mouse) ? RED : BLACK) : BLACK)); 
+
+    //Draw indication that resolution is not allowed
+    text = "Main Monitor too small";
+    font = 15;
+    for(int i = 0; i < 5; i++)
+    {
+        if (!allowedResolution[i])
+            DrawText(text.c_str(), sst::cx(20+i*214), sst::cy(centerTextY(text.c_str(), font) + 55), sst::cx(font), RED); 
+    }
     
 
 }
@@ -101,6 +120,17 @@ void GeneralSettingsMenu::drawDebug()
     }
     //Show current selection
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(20), BLACK);
+    //Show allowedResolution
+    DrawText(TextFormat("MonitorHeight: %i", GetMonitorHeight(0)), sst::cx(50), sst::cy(sst::baseY - 300), sst::cx(20), BLACK);
+    for (int i = 0; i < 5; i++)
+    {
+        DrawText(TextFormat("allowedResolution[%i]: %i", i, static_cast<int>(allowedResolution[i])), sst::cx(50), sst::cy((50 + 30 * i) + sst::baseY - 300), sst::cx(20),BLACK);
+    }
+    //Show currentResolution
+    for (int i = 0; i < 5; i++)
+    {
+        DrawText(TextFormat("currentResolution[%i]: %i", i, static_cast<int>(currentResolution[i])), sst::cx(sst::baseX - 300), sst::cy((50 + 30 * i) + sst::baseY - 300), sst::cx(20),BLACK);
+    }
 }
 
 GuiEvent GeneralSettingsMenu::updateMenuLogic()
@@ -114,23 +144,23 @@ GuiEvent GeneralSettingsMenu::updateMenuLogic()
                 return OpenStartingMenu;
                 break;
             case GSMB_480p:
-                if (!currentResolution[0])
+                if (!currentResolution[0] && allowedResolution[0])
                     return screenSizeTo480p;
                 break;
             case GSMB_720p:
-                if (!currentResolution[1])
+                if (!currentResolution[1] && allowedResolution[1])
                     return screenSizeTo720p;
                 break;
             case GSMB_1080p:
-                if (!currentResolution[2])
+                if (!currentResolution[2] && allowedResolution[2])
                     return screenSizeTo1080p;
                 break;
             case GSMB_1440p:
-                if (!currentResolution[3])
+                if (!currentResolution[3] && allowedResolution[3])
                     return screenSizeTo1440p;
                 break;
             case GSMB_3840p:
-                if (!currentResolution[4])
+                if (!currentResolution[4] && allowedResolution[4])
                     return screenSizeTo3840p;
                 break;
         }
