@@ -8,8 +8,11 @@
         - When RESTART is selected, the difficulty, wind and endless mode of previous match are not carried over, they need to be.
 4. Multiplayer (Thomas)
         - Singplayer class but with things added (so real)
+        - Lobby logic and requirements
 5. Menu
         - Do not store screen resolutions anywhere
+        - Kian needs to fix joinMultiplayerMenu (Add box for IP)
+        - Host Menu Lobby logic
 6. General
         - Logic updates should be moves after EndDrawing() (to avoid conflicts with draw and drawDebug)
         - Find better music for the game

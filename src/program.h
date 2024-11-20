@@ -15,6 +15,7 @@
 #include "singleplayerGameSettingsMenu.h"
 #include "singleplayerWinMenu.h"
 #include "singleplayerPauseMenu.h"
+#include "hostMultiplayerMenu.h"
 //Actual Game windows
 #include "match.h"
 #include "singleplayerMatch.h"
