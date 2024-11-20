@@ -228,7 +228,7 @@ void HostMultiplayerMenu::modifyUsername()
     int key = GetCharPressed();
     while (key > 0)
     {
-        if ((key >= 32) && (key <= 125) && (usernameLetterCount < MAX_CHAR_INPUT))
+        if ((key >= 32) && (key <= 125) && (usernameLetterCount < MAX_NAME_INPUT))
         {
             username[usernameLetterCount] = (char)key;
             username[usernameLetterCount+1] = '\0'; // Add null terminator at the end of the string

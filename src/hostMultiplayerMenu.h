@@ -34,7 +34,7 @@ class HostMultiplayerMenu : public Menu
         int usernameLetterCount;
         Rectangle usernameTextBox;
         bool isModifyingUsername;
-        char username[MAX_CHAR_INPUT + 1] = {0};
+        char username[MAX_NAME_INPUT + 1] = {0};
         int difficulty;
         int wind;
         int playerLimit;
