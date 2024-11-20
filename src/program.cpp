@@ -28,7 +28,7 @@ void Program::loop()
     {
         currentMusic.update();
         
-        if (IsKeyPressed(KEY_ESCAPE)) // For testing purposes
+        if (IsKeyPressed(KEY_ESCAPE) || WindowShouldClose()) // For testing purposes
             end = true;
         
         if (IsKeyPressed(KEY_P))
