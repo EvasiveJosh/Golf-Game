@@ -10,7 +10,6 @@
         - Singplayer class but with things added (so real)
         - Lobby logic and requirements
 5. Menu
-        - Settings menu needs careful consideration. 
         - Do not store screen resolutions anywhere
         - Kian needs to fix joinMultiplayerMenu (Add box for IP)
         - Host Menu Lobby logic
@@ -28,7 +27,6 @@
 8. Camera 
         - Make option for it to center on the ball (just use position of ball)
         - Debug view needs to be overhauled. It needs to stay put when the camera moves (rn it moves with the camera)
-
 
 
 # Golf-Game

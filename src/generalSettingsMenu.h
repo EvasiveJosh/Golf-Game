@@ -23,6 +23,8 @@ class GeneralSettingsMenu : public Menu
         bool currentResolution[5];
         //For volume
         float volumeLevel;
+        //Allowed resolutions
+        bool allowedResolution[5];
     public:
         GeneralSettingsMenu(userSettings* settings);
         void draw() override;

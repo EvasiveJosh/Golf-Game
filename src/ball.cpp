@@ -39,7 +39,7 @@ void Ball::draw()
         DrawLineV(
             {sst::cxf(startDrag.x), sst::cyf(startDrag.y)},
             {sst::cxf(currentDrag.x), sst::cyf(currentDrag.y)},
-            GREEN
+            DARKGRAY
         );
     }
 }

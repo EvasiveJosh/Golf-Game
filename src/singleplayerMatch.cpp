@@ -59,12 +59,14 @@ void SingleplayerMatch::draw()
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
+
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
         int width = square.getWidth();
-        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width), sst::cyf(square.getHeight()), GREEN); // Call the draw method for each square
+        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
     }
+    
     // Draw other elements (e.g., golfball)
     golfball.draw();
 
@@ -74,19 +76,47 @@ void SingleplayerMatch::draw()
 
 void SingleplayerMatch::drawDebug()
 {
+    // Begin using camera for scaling
+    BeginMode2D(camera);
+
+    // Draw golfball debug information
     golfball.drawDebug();
-    //Draw mouse hitbox
-    DrawRectangleRec(mouse.mouseHitbox(), PURPLE);
-    //Draw button hitboxes
+
+    // Draw mouse hitbox, scaling it to match the camera
+    Rectangle mouseHitbox = mouse.mouseHitbox();
+    DrawRectangle(
+        sst::cxf(mouseHitbox.x), 
+        sst::cyf(mouseHitbox.y), 
+        sst::cxf(mouseHitbox.width), 
+        sst::cyf(mouseHitbox.height), 
+        PURPLE
+    );
+
+    // Draw button hitboxes, scaling them to match the camera
     for (int i = 0; i < amountOfButtons(); i++)
     {
-        DrawRectangleLinesEx(buttons[i].getBounds(), 5, PURPLE);
+        Rectangle buttonBounds = buttons[i].getBounds();
+        DrawRectangleLinesEx(
+            Rectangle{
+                sst::cxf(buttonBounds.x), 
+                sst::cyf(buttonBounds.y), 
+                sst::cxf(buttonBounds.width), 
+                sst::cyf(buttonBounds.height)
+            },
+            sst::cx(5), 
+            PURPLE
+        );
     }
-    //Show current selection
+
+    // End using camera before drawing fixed-position UI elements
+    EndMode2D();
+
+    // UI elements (text) are not scaled, drawn in screen space
     int font = 20;
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(font), BLACK);
     DrawText(TextFormat("Wind: %i", wind), 0, sst::cy(40), sst::cx(font), BLACK);
 }
+
 
 GuiEvent SingleplayerMatch::updateLogic()
 {   
@@ -152,10 +182,7 @@ GuiEvent SingleplayerMatch::updateLogic()
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
             golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
-            if (wind == 3)
-                golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
-            else
-                golfball.isRolling = false;
+            golfball.isRolling = (wind == 3);
             golfball.updateLogic();
         }
     }
