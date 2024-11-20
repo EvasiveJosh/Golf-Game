@@ -35,10 +35,9 @@ void Ball::draw()
 
     // Draw drag line
     if (isDragging) {
-        // Scale drag positions appropriately
         DrawLineV(
-            {sst::cxf(startDrag.x), sst::cyf(startDrag.y)},
-            {sst::cxf(currentDrag.x), sst::cyf(currentDrag.y)},
+            {startDrag.x, startDrag.y},
+            {currentDrag.x, currentDrag.y},
             DARKGRAY
         );
     }
@@ -139,6 +138,11 @@ Vector2 Ball::getBallPosition()
     return {ballPosition.x, ballPosition.y};
 }
 
+Vector2 Ball::getVelocity()
+{
+    return {velocity.x, velocity.y};
+}
+
 void Ball::updateVelocity(Vector2 newVel)
 {
     velocity = newVel;
@@ -148,4 +152,3 @@ int Ball::getShotCount() const
 {
     return shotCount;
 }
-

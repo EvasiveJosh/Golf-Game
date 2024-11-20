@@ -55,6 +55,7 @@ class Ball
         void updateVelocity(Vector2 newVel);
         //ResetGame needs to be overhauled
         Vector2 getBallPosition();
+        Vector2 getVelocity();
         // Getter for shot count
         int getShotCount() const;
 };

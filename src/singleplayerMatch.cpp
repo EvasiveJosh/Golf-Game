@@ -95,10 +95,10 @@ void SingleplayerMatch::drawDebug()
 
     // Draw the mouse hitbox in world coordinates
     DrawRectangle(
-        sst::cxf(mouseHitboxWorld.x),
-        sst::cyf(mouseHitboxWorld.y),
-        sst::cxf(mouseHitboxWorld.width),
-        sst::cyf(mouseHitboxWorld.height),
+        mouseHitboxWorld.x,
+        mouseHitboxWorld.y,
+        mouseHitboxWorld.width,
+        mouseHitboxWorld.height,
         PURPLE
     );
 
@@ -108,10 +108,10 @@ void SingleplayerMatch::drawDebug()
         Rectangle buttonBounds = buttons[i].getBounds();
         DrawRectangleLinesEx(
             Rectangle{
-                sst::cxf(buttonBounds.x),
-                sst::cyf(buttonBounds.y),
-                sst::cxf(buttonBounds.width),
-                sst::cyf(buttonBounds.height)
+                buttonBounds.x,
+                buttonBounds.y,
+                buttonBounds.width,
+                buttonBounds.height
             },
             sst::cx(5),
             PURPLE
@@ -126,7 +126,6 @@ void SingleplayerMatch::drawDebug()
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(font), BLACK);
     DrawText(TextFormat("Wind: %i", wind), 0, sst::cy(40), sst::cx(font), BLACK);
 }
-
 
 GuiEvent SingleplayerMatch::updateLogic()
 {   
@@ -159,33 +158,29 @@ GuiEvent SingleplayerMatch::updateLogic()
     //Launch the ball check
     if (golfball.isStopped)
     {
-        // World-space mouse position
-        Vector2 worldMousePos = GetScreenToWorld2D(mouse.position(), camera);
+        // Convert mouse position to world coordinates
+        Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !golfball.isDragging)
         {
-            // Convert ball world position to screen position
-            Vector2 screenBallPosition = GetWorldToScreen2D(golfball.getBallPosition(), camera);
+            // Apply scaling (similar to how you're drawing the ball)
+            Vector2 scaledBallPos = {sst::cxf(golfball.getBallPosition().x), sst::cyf(golfball.getBallPosition().y)};
+            
+            // Scale the radius by zoom level
+            float scaledRadius = BALL_RADIUS * sqrt((float)GetScreenWidth() / sst::baseX * (float)GetScreenHeight() / sst::baseY);
 
             // Check if mouse position is inside the ball's screen-space bounds
-            float ballScreenRadius = BALL_RADIUS * camera.zoom; // Scale the radius by zoom level
-            if (CheckCollisionPointCircle(mouse.position(), screenBallPosition, ballScreenRadius))
+            if (CheckCollisionPointCircle(mouseWorldPos, scaledBallPos, scaledRadius))
             {
                 golfball.isDragging = true;
-                golfball.startDrag = golfball.getBallPosition();
-                golfball.currentDrag = GetScreenToWorld2D({
-                    mouse.position().x / sst::cxf(1),
-                    mouse.position().y / sst::cyf(1)
-                }, camera);
+                golfball.startDrag = scaledBallPos;
+                golfball.currentDrag = mouseWorldPos;
                 golfball.updateVelocity({0,0});
             }
-        } 
+        }
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
-            golfball.currentDrag = GetScreenToWorld2D({
-                mouse.position().x / sst::cxf(1),
-                mouse.position().y / sst::cyf(1)
-            }, camera);
+            golfball.currentDrag = mouseWorldPos;
         }
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
