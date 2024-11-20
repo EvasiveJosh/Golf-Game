@@ -63,7 +63,7 @@ GuiEvent MultiplayerMenu::updateMenuLogic()
             case MMB_Back:
                 return OpenStartingMenu;
             case MMB_Host:
-                break;
+                return OpenHostMultiplayerMenu;
             case MMB_Join:
                 return OpenJoinMultiplayerMenu;
                 break;

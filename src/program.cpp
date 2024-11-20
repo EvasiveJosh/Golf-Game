@@ -159,5 +159,8 @@ void Program::updateLogic(GuiEvent state)
                 currentMatch->resume();
             break;
         
+        case OpenHostMultiplayerMenu:
+            this->currentMenu = std::make_unique<HostMultiplayerMenu>();
+            break;
     }
 }
