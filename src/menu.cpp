@@ -69,6 +69,12 @@ std::string Menu::getHostName()
     return "";
 }
 
+std::string Menu::getIpAddress()
+{
+    //Does nothing by default
+    return "";    
+}
+
 std::vector<int> Menu::getInformation()
 {
     //Does nothing by default
@@ -80,4 +86,5 @@ const float& Menu::getVolumeLevel()
     //Does nothing by default
     return 0.0f;
 }
+
 
