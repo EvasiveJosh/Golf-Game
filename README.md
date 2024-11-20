@@ -9,10 +9,7 @@
 4. Multiplayer (Thomas)
         - Singplayer class but with things added (so real)
 5. Menu
-        - Settings menu needs careful consideration. 
         - Do not store screen resolutions anywhere
-        - HostMenu
-        - Kian needs to fix joinMultiplayerMenu (Add box for IP)
 6. General
         - Logic updates should be moves after EndDrawing() (to avoid conflicts with draw and drawDebug)
         - Find better music for the game
@@ -27,7 +24,6 @@
 8. Camera 
         - Make option for it to center on the ball (just use position of ball)
         - Debug view needs to be overhauled. It needs to stay put when the camera moves (rn it moves with the camera)
-
 
 
 # Golf-Game
