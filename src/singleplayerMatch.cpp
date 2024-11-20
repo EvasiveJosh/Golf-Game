@@ -59,7 +59,7 @@ void SingleplayerMatch::draw()
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
-    
+
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
@@ -182,10 +182,7 @@ GuiEvent SingleplayerMatch::updateLogic()
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
             golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
-            if (wind == 3)
-                golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
-            else
-                golfball.isRolling = false;
+            golfball.isRolling = (wind == 3);
             golfball.updateLogic();
         }
     }
