@@ -76,19 +76,47 @@ void SingleplayerMatch::draw()
 
 void SingleplayerMatch::drawDebug()
 {
+    // Begin using camera for scaling
+    BeginMode2D(camera);
+
+    // Draw golfball debug information
     golfball.drawDebug();
-    //Draw mouse hitbox
-    DrawRectangleRec(mouse.mouseHitbox(), PURPLE);
-    //Draw button hitboxes
+
+    // Draw mouse hitbox, scaling it to match the camera
+    Rectangle mouseHitbox = mouse.mouseHitbox();
+    DrawRectangle(
+        sst::cxf(mouseHitbox.x), 
+        sst::cyf(mouseHitbox.y), 
+        sst::cxf(mouseHitbox.width), 
+        sst::cyf(mouseHitbox.height), 
+        PURPLE
+    );
+
+    // Draw button hitboxes, scaling them to match the camera
     for (int i = 0; i < amountOfButtons(); i++)
     {
-        DrawRectangleLinesEx(buttons[i].getBounds(), 5, PURPLE);
+        Rectangle buttonBounds = buttons[i].getBounds();
+        DrawRectangleLinesEx(
+            Rectangle{
+                sst::cxf(buttonBounds.x), 
+                sst::cyf(buttonBounds.y), 
+                sst::cxf(buttonBounds.width), 
+                sst::cyf(buttonBounds.height)
+            },
+            sst::cx(5), 
+            PURPLE
+        );
     }
-    //Show current selection
+
+    // End using camera before drawing fixed-position UI elements
+    EndMode2D();
+
+    // UI elements (text) are not scaled, drawn in screen space
     int font = 20;
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(font), BLACK);
     DrawText(TextFormat("Wind: %i", wind), 0, sst::cy(40), sst::cx(font), BLACK);
 }
+
 
 GuiEvent SingleplayerMatch::updateLogic()
 {   
