@@ -76,42 +76,52 @@ void SingleplayerMatch::draw()
 
 void SingleplayerMatch::drawDebug()
 {
-    // Begin using camera for scaling
+    // Convert mouse position to world coordinates
+    Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+    // Create a new hitbox in world coordinates for the mouse
+    Rectangle mouseHitboxWorld = {
+        mouseWorldPos.x,
+        mouseWorldPos.y,
+        mouse.mouseHitbox().width,
+        mouse.mouseHitbox().height
+    };
+
+    // Begin using the camera for scaling world elements
     BeginMode2D(camera);
 
     // Draw golfball debug information
     golfball.drawDebug();
 
-    // Draw mouse hitbox, scaling it to match the camera
-    Rectangle mouseHitbox = mouse.mouseHitbox();
+    // Draw the mouse hitbox in world coordinates
     DrawRectangle(
-        sst::cxf(mouseHitbox.x), 
-        sst::cyf(mouseHitbox.y), 
-        sst::cxf(mouseHitbox.width), 
-        sst::cyf(mouseHitbox.height), 
+        sst::cxf(mouseHitboxWorld.x),
+        sst::cyf(mouseHitboxWorld.y),
+        sst::cxf(mouseHitboxWorld.width),
+        sst::cyf(mouseHitboxWorld.height),
         PURPLE
     );
 
-    // Draw button hitboxes, scaling them to match the camera
+    // Draw button hitboxes, scaled with the camera
     for (int i = 0; i < amountOfButtons(); i++)
     {
         Rectangle buttonBounds = buttons[i].getBounds();
         DrawRectangleLinesEx(
             Rectangle{
-                sst::cxf(buttonBounds.x), 
-                sst::cyf(buttonBounds.y), 
-                sst::cxf(buttonBounds.width), 
+                sst::cxf(buttonBounds.x),
+                sst::cyf(buttonBounds.y),
+                sst::cxf(buttonBounds.width),
                 sst::cyf(buttonBounds.height)
             },
-            sst::cx(5), 
+            sst::cx(5),
             PURPLE
         );
     }
 
-    // End using camera before drawing fixed-position UI elements
+    // End using the camera before drawing fixed-position UI elements
     EndMode2D();
 
-    // UI elements (text) are not scaled, drawn in screen space
+    // UI elements (text) remain in screen space
     int font = 20;
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(font), BLACK);
     DrawText(TextFormat("Wind: %i", wind), 0, sst::cy(40), sst::cx(font), BLACK);
