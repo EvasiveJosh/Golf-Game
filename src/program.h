@@ -29,6 +29,7 @@ class Program
     private:
         std::string username;
         std::string hostname;
+        std::string inputIPAddress;
         //Gui Stuff
         bool end;
         bool debug;

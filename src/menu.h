@@ -24,7 +24,8 @@ TODO:
 - Change beforeDraw and drawDebug to have part of those done by default in Menu class
 */
 
-#define MAX_CHAR_INPUT 10
+#define MAX_NAME_INPUT 10
+#define MAX_IPADDRESS_INPUT 20
 
 class Menu
 {
@@ -32,8 +33,9 @@ class Menu
         TextureClass textures;
         Mouse mouse;
         std::vector<Button> buttons;
-        char username[MAX_CHAR_INPUT + 1] = "\0"; //Used only by some menu classes (such as joinMultiplayerMenu)
-        char hostname[MAX_CHAR_INPUT + 1] = "\0"; //Used only by some menu classes (such as joinMultiplayerMenu)
+        char username[MAX_NAME_INPUT + 1] = "\0"; //Used only by some menu classes (such as joinMultiplayerMenu)
+        char hostname[MAX_NAME_INPUT + 1] = "\0"; //Used only by some menu classes (such as joinMultiplayerMenu)
+        char ipAddress[MAX_IPADDRESS_INPUT + 1] = "\0"; //Used only by some menu classes (such as joinMultiplayerMenu)
     public:
         virtual ~Menu() = default;
         //Pure virtual functions that every menu class should have
@@ -48,6 +50,7 @@ class Menu
         //Returns the corresponding strings
         virtual std::string getUserName();
         virtual std::string getHostName();
+        virtual std::string getIpAddress();
         virtual std::vector<int> getInformation();
         virtual const float& getVolumeLevel(); //Used in generalSettingsMenu
 
