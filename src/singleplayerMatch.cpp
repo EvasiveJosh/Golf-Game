@@ -42,6 +42,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     cameraShouldFollowBall = false;
     cameraShouldCenter = false;
     smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
+    defaultZoom = 1.0f;
 }
 
 void SingleplayerMatch::draw()
@@ -59,12 +60,14 @@ void SingleplayerMatch::draw()
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
+
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
         int width = square.getWidth();
-        DrawRectangle(posX, yPos, width, square.getHeight(), GREEN); // Call the draw method for each square
+        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
     }
+    
     // Draw other elements (e.g., golfball)
     golfball.draw();
 
@@ -74,15 +77,52 @@ void SingleplayerMatch::draw()
 
 void SingleplayerMatch::drawDebug()
 {
+    // Convert mouse position to world coordinates
+    Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+    // Create a new hitbox in world coordinates for the mouse
+    Rectangle mouseHitboxWorld = {
+        mouseWorldPos.x,
+        mouseWorldPos.y,
+        mouse.mouseHitbox().width,
+        mouse.mouseHitbox().height
+    };
+
+    // Begin using the camera for scaling world elements
+    BeginMode2D(camera);
+
+    // Draw golfball debug information
     golfball.drawDebug();
-    //Draw mouse hitbox
-    DrawRectangleRec(mouse.mouseHitbox(), PURPLE);
-    //Draw button hitboxes
+
+    // Draw the mouse hitbox in world coordinates
+    DrawRectangle(
+        mouseHitboxWorld.x,
+        mouseHitboxWorld.y,
+        mouseHitboxWorld.width,
+        mouseHitboxWorld.height,
+        PURPLE
+    );
+
+    // Draw button hitboxes, scaled with the camera
     for (int i = 0; i < amountOfButtons(); i++)
     {
-        DrawRectangleLinesEx(buttons[i].getBounds(), 5, PURPLE);
+        Rectangle buttonBounds = buttons[i].getBounds();
+        DrawRectangleLinesEx(
+            Rectangle{
+                buttonBounds.x,
+                buttonBounds.y,
+                buttonBounds.width,
+                buttonBounds.height
+            },
+            sst::cx(5),
+            PURPLE
+        );
     }
-    //Show current selection
+
+    // End using the camera before drawing fixed-position UI elements
+    EndMode2D();
+
+    // UI elements (text) remain in screen space
     int font = 20;
     DrawText(TextFormat("Buttons[%i]", buttonClicked()), 0, 0, sst::cx(font), BLACK);
     DrawText(TextFormat("Wind: %i", wind), 0, sst::cy(40), sst::cx(font), BLACK);
@@ -119,44 +159,43 @@ GuiEvent SingleplayerMatch::updateLogic()
     //Launch the ball check
     if (golfball.isStopped)
     {
-        // World-space mouse position
-        Vector2 worldMousePos = GetScreenToWorld2D(mouse.position(), camera);
+        // Convert mouse position to world coordinates
+        Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !golfball.isDragging)
         {
-            // Convert ball world position to screen position
-            Vector2 screenBallPosition = GetWorldToScreen2D(golfball.getPosition(), camera);
+            // Apply scaling (similar to how you're drawing the ball)
+            Vector2 scaledBallPos = {sst::cxf(golfball.getPosition().x), sst::cyf(golfball.getPosition().y)};
+            
+            // Scale the radius by zoom level
+            float scaledRadius = BALL_RADIUS * sqrt((float)GetScreenWidth() / sst::baseX * (float)GetScreenHeight() / sst::baseY);
 
             // Check if mouse position is inside the ball's screen-space bounds
-            float ballScreenRadius = BALL_RADIUS * camera.zoom; // Scale the radius by zoom level
-            if (CheckCollisionPointCircle(mouse.position(), screenBallPosition, ballScreenRadius))
+            if (CheckCollisionPointCircle(mouseWorldPos, scaledBallPos, scaledRadius))
             {
                 golfball.isDragging = true;
-                golfball.startDrag = golfball.getPosition();
+                golfball.startDrag = golfball.getBallPosition();
                 golfball.currentDrag = GetScreenToWorld2D({
                     mouse.position().x / sst::cxf(1),
                     mouse.position().y / sst::cyf(1)
                 }, camera);
-                golfball.setVelocity({0,0});
+                golfball.updateVelocity({0,0});
             }
-        } 
+        }
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
-            golfball.currentDrag = GetScreenToWorld2D({
-                mouse.position().x / sst::cxf(1),
-                mouse.position().y / sst::cyf(1)
-            }, camera);
+            golfball.currentDrag = mouseWorldPos;
         }
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
-            golfball.setVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
+            golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
             if (wind == 3)
                 golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
             else
                 golfball.isRolling = false;
-            golfball.update();
+            golfball.updateLogic();
         }
     }
     return Nothing;
@@ -219,26 +258,30 @@ void SingleplayerMatch::updateCamera() {
     // Camera centered (when `cameraShouldCenter` is true)
     if (cameraShouldCenter) {
         Vector2 targetPosition = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)};
-        float targetZoom = 1.0f;
+        float centerZoom = 1.0f;
 
         // Smoothly move the camera towards the center position
         camera.target.x += (targetPosition.x - camera.target.x) * smoothingFactor;
         camera.target.y += (targetPosition.y - camera.target.y) * smoothingFactor;
+        defaultZoom = centerZoom;
 
         // Default zoom unless scrollwheel moves
         if(GetMouseWheelMove() != 0) {
             cameraShouldCenter = false;
         } else {
-            camera.zoom += (targetZoom - camera.zoom) * smoothingFactor;
+            camera.zoom += (centerZoom - camera.zoom) * smoothingFactor;
         }
     }
 
-    // Zoom camera (mouse wheel)
-    camera.zoom += GetMouseWheelMove() * 0.25f;
+    // Update desired zoom level when the mouse wheel moves
+    defaultZoom += GetMouseWheelMove() * 0.25f;
 
-    // Limit zoom range
-    if (camera.zoom < 0.5f) camera.zoom = 0.5f;
-    if (camera.zoom > 10.0f) camera.zoom = 10.0f;
+    // Limit the desired zoom range
+    if (defaultZoom < 0.5f) defaultZoom = 0.5f;
+    if (defaultZoom > 10.0f) defaultZoom = 10.0f;
+
+    // Smoothly transition the current zoom to the desired zoom level
+    camera.zoom += (defaultZoom - camera.zoom) * smoothingFactor;
 }
 
 int SingleplayerMatch::getShotCount() const 

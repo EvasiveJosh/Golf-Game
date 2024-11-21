@@ -28,6 +28,8 @@ set(SOURCES
     src/userSettings.cpp
     src/singleplayerWinMenu.cpp
     src/singleplayerPauseMenu.cpp
+    src/hostMultiplayerMenu.cpp
+    src/lobby.cpp
 )
 
 set(HEADERS
@@ -52,6 +54,8 @@ set(HEADERS
     src/userSettings.h
     src/singleplayerWinMenu.h
     src/singleplayerPauseMenu.h
+    src/hostMultiplayerMenu.h
+    src/lobby.h
 )
 ]]
 
@@ -88,7 +92,14 @@ FetchContent_MakeAvailable(raylib)
 # Create the executable and link raylib
 add_executable(main ${SOURCES} ${HEADERS})
 target_compile_options(main PRIVATE 
-    #-Wall -Wextra -pedantic -Werror
+    #-Wall   #Turns on all warnings
+    #-Wextra  #Turns on more warnings
+    #-pedantic #Checks if the code is standard compliant (we're cooked)
+    #-Werror #Forces all warnings to be treated as errors
+    #-Wno-unused-variable #compiler does not treat unused variables as errors
+    #-Wno-unused-parameter #compiler does not treat unused function variable parameters as errors
+    #-Wno-sign-compare #compiler does not treat improper comparisons as errors
+    -Wno-enum-compare #compiler does not treat improper enum comparisons as errors
     )
 target_link_libraries(main raylib)
 

@@ -27,6 +27,7 @@ class SingleplayerMatch : public Match
         TextureClass flag;
         Ball golfball;
         bool isPaused;
+        float defaultZoom;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;

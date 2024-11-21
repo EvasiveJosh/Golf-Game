@@ -1,8 +1,22 @@
 #include "program.h"
+#include "startMenu.h"
+#include "generalSettingsMenu.h"
+#include "multiplayerMenu.h"
+#include "joinMultiplayerMenu.h"
+#include "singleplayerGameSettingsMenu.h"
+#include "singleplayerWinMenu.h"
+#include "singleplayerPauseMenu.h"
+#include "hostMultiplayerMenu.h"
+#include "lobby.h"
+//Threads
+#include <thread>
+#include <chrono>
+#include <atomic>
 
 
 Program::Program() : currentMusic(), settings()
 {
+    SetConfigFlags(FLAG_VSYNC_HINT); // Vertical Sync (prevents screen tearing)
     InitWindow(sst::baseX, sst::baseY, "Game");
 
     SetTargetFPS(60);
@@ -13,6 +27,7 @@ Program::Program() : currentMusic(), settings()
     currentMenu = std::make_unique<StartMenu>();
     inSingleplayerGame = false;
     bool inMultiplayerGame = false;
+    gameSettings = std::vector<int>();
 
 }
 
@@ -24,11 +39,18 @@ void Program::close()
 
 void Program::loop()
 {
+    std::atomic<bool> running(true);
+    std::thread musicThread([&] {
+        while(running.load()) 
+        {
+            currentMusic.update();
+            std::this_thread::sleep_for(std::chrono::milliseconds(17)); // Approximation of 16.667 ms
+        }
+    });
+
     while (!end)
-    {
-        currentMusic.update();
-        
-        if (IsKeyPressed(KEY_ESCAPE)) // For testing purposes
+    {   
+        if (IsKeyPressed(KEY_ESCAPE) || WindowShouldClose()) // For testing purposes
             end = true;
         
         if (IsKeyPressed(KEY_P))
@@ -36,47 +58,41 @@ void Program::loop()
         
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        
-        if (!inSingleplayerGame && !inMultiplayerGame)
+
+        // Drawing updates
+        if (inSingleplayerGame && currentMatch)
+        {
+            currentMatch->draw(); // Always draw the game
+            if (debug)
+                currentMatch->drawDebug();
+
+            if (currentMenu) // If a menu is active, draw it on top
+                currentMenu->draw();
+        }
+        else if (currentMenu)
         {
             currentMenu->draw();
             if (debug)
                 currentMenu->drawDebug();
         }
 
-        if (inSingleplayerGame)
+        EndDrawing();
+
+        // Logic updates
+        if (inSingleplayerGame && currentMatch)
         {
-            if (currentMatch)
-            {
-                currentMatch->draw(); // Always draw the game
-
-                if (currentMenu) // If a menu is active, draw it on top
-                {
-                    currentMenu->draw();
-                    updateLogic(currentMenu->updateMenuLogic());
-                }
-                else // If no menu, update game logic
-                {
-                    updateLogic(currentMatch->updateLogic());
-                }
-
-                if (debug)
-                    currentMatch->drawDebug();
-            }
+            if (currentMenu) // If a menu is active, update its logic
+                updateLogic(currentMenu->updateMenuLogic());
+            else // If no menu, update game logic
+                updateLogic(currentMatch->updateLogic());
         }
         else if (currentMenu)
         {
-            currentMenu->draw();
             updateLogic(currentMenu->updateMenuLogic());
         }
-
-        EndDrawing();
-
-        // if (!inSingleplayerGame && !inMultiplayerGame)
-        //     updateLogic(currentMenu->updateMenuLogic()); //Compute new state for menu
-        // if (inSingleplayerGame)
-        //     updateLogic(currentMatch->updateLogic()); //Compute new state for sp match
     }
+    running.store(false);
+    musicThread.join();
 }
 
 void Program::updateLogic(GuiEvent state)
@@ -97,6 +113,7 @@ void Program::updateLogic(GuiEvent state)
                 currentMatch = nullptr;
                 inSingleplayerGame = false;
             }
+            gameSettings.clear(); // Reset game settings when opening the starting menu
             this->currentMenu = std::make_unique<StartMenu>();
             break;
         case OpenMultiplayerMenu:
@@ -121,14 +138,19 @@ void Program::updateLogic(GuiEvent state)
             this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo1440p:
-            
+            SetWindowSize(2560, 1440);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 2560/2, GetMonitorHeight(0)/2 - 1440/2);
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case screenSizeTo3840p:
-            
+            SetWindowSize(3840, 2160);
+            SetWindowPosition(GetMonitorWidth(0)/2 - 3840/2, GetMonitorHeight(0)/2 - 2160/2);
+            this->currentMenu = std::make_unique<GeneralSettingsMenu>(&this->settings); 
             break;
         case TryJoinMultiplayerGame:
             username = this->currentMenu->getUserName(); //TODO, ensure no empty string can be returned...
             hostname = this->currentMenu->getHostName(); //TODO, ensure no empty string can be returned...
+            inputIPAddress = this->currentMenu->getIpAddress(); //TODO, ensure no empty string can be returned...
             //what should the program do when the user tries to join a hosts lobby
             break;
 
@@ -138,7 +160,12 @@ void Program::updateLogic(GuiEvent state)
 
         case StartSingleplayerGame:
             inSingleplayerGame = true;
-            currentMatch = std::make_unique<SingleplayerMatch>(this->currentMenu->getInformation());
+            if (currentMenu && dynamic_cast<SingleplayerGameSettingsMenu*>(currentMenu.get())) {
+                // If coming from settings menu, get new settings
+                gameSettings = this->currentMenu->getInformation();
+            }
+            // Otherwise use existing gameSettings
+            currentMatch = std::make_unique<SingleplayerMatch>(gameSettings);
             currentMenu = nullptr;
             break;
         
@@ -169,5 +196,18 @@ void Program::updateLogic(GuiEvent state)
                 currentMatch->resume();
             break;
         
+        case OpenHostMultiplayerMenu:
+            this->currentMenu = std::make_unique<HostMultiplayerMenu>();
+            break;
+
+        case CreateLobby:
+            if (currentMenu)
+            {
+                std::string username = currentMenu->getUserName();
+                std::vector<int> settings = currentMenu->getInformation();
+                int playerLimit = settings[2];
+                this->currentMenu = std::make_unique<Lobby>(username, settings, playerLimit);
+            }
+            break;
     }
 }
