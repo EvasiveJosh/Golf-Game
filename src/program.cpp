@@ -16,6 +16,7 @@
 
 Program::Program() : currentMusic(), settings()
 {
+    SetConfigFlags(FLAG_VSYNC_HINT); // Vertical Sync (prevents screen tearing)
     InitWindow(sst::baseX, sst::baseY, "Game");
 
     SetTargetFPS(60);
