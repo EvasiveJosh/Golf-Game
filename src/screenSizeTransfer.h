@@ -35,16 +35,6 @@ namespace sst
     {
         return (((float)GetScreenHeight())/baseY) * y;
     }
-
-    inline float cxfinv(float x)
-    {
-        return (baseX/((float)GetScreenWidth())) * x;
-    }
-
-    inline float cyfinv(float y)
-    {
-        return (baseY/((float)GetScreenHeight())) * y;
-    }
 }
 
 #endif

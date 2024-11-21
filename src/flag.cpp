@@ -9,7 +9,7 @@ Flag::Flag(){
 
 Flag::Flag(float baseX, float baseY, float scale)
     : scale(scale) {
-    flagPosition = { baseX, baseY };
+    flagPosition = { baseX - 72, baseY };
     texture = LoadTexture("../resources/1.png");
 }
 

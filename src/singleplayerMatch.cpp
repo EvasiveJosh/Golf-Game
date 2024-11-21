@@ -37,7 +37,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     // flag.loadTexture(); //Load the image into a texture
 
     //initialize flag - adjust X position slightly less to the left
-    flag = Flag(holeX - 72, holeY, 1.0f);
+    flag = Flag(holeX, holeY, 1.0f);
     terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
@@ -52,6 +52,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 
 void SingleplayerMatch::draw()
 {
+    // Begin using the camera for scaling world elements
     BeginMode2D(camera);
 
     //base terrain
