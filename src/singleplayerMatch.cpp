@@ -29,10 +29,13 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     //Create Hole at ground level at opposite playing side
     addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying (I modified this see note above - Gabriel)
 
-    //Load flag
-    flag.loadImage("resources", PixelFlag); //Get flag
-    flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
-    flag.loadTexture(); //Load the image into a texture
+    //old flag code (just in case) DELETE LATER
+    // flag.loadImage("resources", PixelFlag); //Get flag
+    // flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
+    // flag.loadTexture(); //Load the image into a texture
+
+    //initialize flag
+    flag = Flag(sst::baseX - 169, sst::baseY - GRASS_HEIGHT-189, 1.0f); //constructed flag object
 
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
@@ -56,11 +59,13 @@ void SingleplayerMatch::draw()
     DrawCircle(10,10,3,RED);
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
-    //Draw flag
-    DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
+    //old draw flag
+    // DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
+    //draw flag
+    flag.draw();
+    
     //draw each terrain segment
-
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();

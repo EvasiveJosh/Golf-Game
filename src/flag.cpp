@@ -19,7 +19,7 @@ Flag::Flag(int baseX, int baseY, float scale)
 // }
 
 void Flag::draw() const {
-   DrawTexture(texture, flagPosition.x, sst::cy(flagPosition.y - GRASS_HEIGHT - 189), WHITE);
+   DrawTexture(texture, flagPosition.x, flagPosition.y, WHITE);
 }
 
 Vector2 Flag::getPosition() const {

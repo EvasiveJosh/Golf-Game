@@ -29,6 +29,7 @@ set(SOURCES
     src/singleplayerPauseMenu.cpp
     src/hostMultiplayerMenu.cpp
     src/lobby.cpp
+    src/flag.cpp
 )
 
 set(HEADERS
@@ -55,6 +56,7 @@ set(HEADERS
     src/singleplayerPauseMenu.h
     src/hostMultiplayerMenu.h
     src/lobby.h
+    src/flag.h
 )
 
 add_compile_options(

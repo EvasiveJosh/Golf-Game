@@ -10,6 +10,7 @@
 #include "match.h"
 #include "terrain.h"
 #include "vector"
+#include "flag.h"
 
 /*
 TODO:
@@ -24,7 +25,7 @@ class SingleplayerMatch : public Match
 {
     private:
         std::vector<TerrainSquare> terrain;
-        TextureClass flag;
+        Flag flag;
         Ball golfball;
         bool isPaused;
         float defaultZoom;
