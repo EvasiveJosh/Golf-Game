@@ -2,14 +2,14 @@
 
 
 Flag::Flag(){
-    flagPosition = {sst::cxf(0),sst::cyf(0)};
+    flagPosition = {0, 0};
     scale = 1.0;
     texture = LoadTexture("../resources/1.png");
 }
 
-Flag::Flag(int baseX, int baseY, float scale)
+Flag::Flag(float baseX, float baseY, float scale)
     : scale(scale) {
-    flagPosition = { sst::cxf(baseX), sst::cyf(baseY) };
+    flagPosition = { baseX, baseY };
     texture = LoadTexture("../resources/1.png");
 }
 
@@ -19,13 +19,27 @@ Flag::Flag(int baseX, int baseY, float scale)
 // }
 
 void Flag::draw() const {
-   DrawTexture(texture, flagPosition.x, flagPosition.y, WHITE);
+    float scaledX = sst::cxf(flagPosition.x);
+    float scaledY = sst::cyf(flagPosition.y);
+    
+    float scaleX = (float)GetScreenWidth() / sst::baseX;
+    float scaleY = (float)GetScreenHeight() / sst::baseY;
+    
+    Rectangle source = { 0, 0, (float)texture.width, (float)texture.height };
+    Rectangle dest = { 
+        scaledX - sst::cxf(3), 
+        scaledY - (texture.height * scaleY) + sst::cyf(16), 
+        texture.width * scaleX, 
+        texture.height * scaleY 
+    };
+    
+    DrawTexturePro(texture, source, dest, {0, 0}, 0, WHITE);
 }
 
 Vector2 Flag::getPosition() const {
-    return{flagPosition.x,flagPosition.y};
+    return flagPosition;
 }
 
 void Flag::setPosition(int baseX, int baseY) {
-    flagPosition = { sst::cxf(baseX), sst::cyf(baseY) };
+    flagPosition = { (float)baseX, (float)baseY };
 }

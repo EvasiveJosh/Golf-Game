@@ -27,15 +27,17 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
-    addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying (I modified this see note above - Gabriel)
+    int holeX = sst::baseX - 98;
+    int holeY = sst::baseY - GRASS_HEIGHT - 5;
+    addButton("Hole", Rectangle{(float)holeX, (float)holeY, 15, 15});
 
     //old flag code (just in case) DELETE LATER
     // flag.loadImage("resources", PixelFlag); //Get flag
     // flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
     // flag.loadTexture(); //Load the image into a texture
 
-    //initialize flag
-    flag = Flag(sst::baseX - 169, sst::baseY - GRASS_HEIGHT-189, 1.0f); //constructed flag object
+    //initialize flag - adjust X position slightly less to the left
+    flag = Flag(holeX - 72, holeY, 1.0f);
     terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
@@ -50,33 +52,30 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 
 void SingleplayerMatch::draw()
 {
-    // Start using camera
     BeginMode2D(camera);
 
     //base terrain
-    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), 
+                 sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
 
-    DrawCircle(10,10,3,RED);
     //Draw some default sky
-    DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
-    //old draw flag
-    // DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
+    DrawRectangle(sst::cx(0), sst::cy(0), 
+                 sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
 
     //draw flag
     flag.draw();
     
     //draw each terrain segment
     for (const TerrainSquare& square : terrain) {
-        int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
-        int posX = square.getPosX();
-        int width = square.getWidth();
-        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
+        int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight() + 1;
+        DrawRectangle(sst::cxf(square.getPosX()), 
+                     sst::cyf(yPos),
+                     sst::cxf(square.getWidth()),
+                     sst::cyf(square.getHeight()),
+                     GREEN);
     }
     
-    // Draw other elements (e.g., golfball)
     golfball.draw();
-
-    // End using camera (before drawing UI text)
     EndMode2D();
 }
 

@@ -40,11 +40,20 @@ vector<TerrainSquare> Terrain::GenerateTerrain(int difficulty, Ball& golfball, c
         levelSize = 12;
     }
     //get the width between the ball and flag
-    int totalWidth = sst::cx(flagposVec.x) - sst::cx(ballPosVec.x + 50);
+    int totalWidth = flagposVec.x - (ballPosVec.x + 50);
+    std::cout << "\n=== Terrain Generation Debug Info ===" << std::endl;
+    std::cout << "Raw Flag X: " << flagposVec.x << std::endl;
+    std::cout << "Raw Ball X: " << ballPosVec.x << std::endl;
+    std::cout << "Raw Ball X + 50: " << (ballPosVec.x + 50) << std::endl;
+    std::cout << "Total width between ball and flag: " << totalWidth << std::endl;
+    
     //get the width that each segment can be and fit in the level size
     int segmentWidth = totalWidth/levelSize;
+    std::cout << "Level size (num segments): " << levelSize << std::endl;
+    std::cout << "Segment width: " << segmentWidth << std::endl;
+    std::cout << "==================================\n" << std::endl;
     //starting x position for segment
-    int x = sst::cx(ballPosVec.x+50);
+    int x = ballPosVec.x + 50;
     vector<TerrainSquare> terrain; //vector that holds the segment objects
     srand(time(0));
     for(int i = 0; i<levelSize ;i++){

@@ -14,7 +14,7 @@ private:
 
 public:
     Flag();
-    Flag(int baseX, int baseY, float scale = 1.0f);
+    Flag(float baseX, float baseY, float scale = 1.0f);
     // ~Flag();
 
     void draw() const;    //draw the flag
