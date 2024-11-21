@@ -29,7 +29,8 @@ enum GuiEvent
     OpenSingleplayerWinMenu,
     PauseGame,
     ResumeGame,
-    OpenHostMultiplayerMenu
+    OpenHostMultiplayerMenu,
+    CreateLobby
 };
 
 #endif

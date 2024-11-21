@@ -7,6 +7,7 @@
 #include "singleplayerWinMenu.h"
 #include "singleplayerPauseMenu.h"
 #include "hostMultiplayerMenu.h"
+#include "lobby.h"
 //Threads
 #include <thread>
 #include <chrono>
@@ -196,6 +197,16 @@ void Program::updateLogic(GuiEvent state)
         
         case OpenHostMultiplayerMenu:
             this->currentMenu = std::make_unique<HostMultiplayerMenu>();
+            break;
+
+        case CreateLobby:
+            if (currentMenu)
+            {
+                std::string username = currentMenu->getUserName();
+                std::vector<int> settings = currentMenu->getInformation();
+                int playerLimit = settings[2];
+                this->currentMenu = std::make_unique<Lobby>(username, settings, playerLimit);
+            }
             break;
     }
 }

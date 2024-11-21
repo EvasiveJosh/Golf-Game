@@ -29,7 +29,7 @@ void HostMultiplayerMenu::addButtons()
 
     font = 50;
     text = "Your Username";
-    usernameTextBox = { 20.0f, 134.0f, 400.0f, 70.0f };
+    usernameTextBox = { 20.0f, 150.0f, 400.0f, 70.0f };
     addButton(text, usernameTextBox);
 
     // Add game settings buttons
@@ -79,11 +79,32 @@ void HostMultiplayerMenu::draw()
     // Draw Username Input Box
     font = 50;
     text = "Your Username";
-    DrawText(text.c_str(), sst::cx(20), sst::cy(84), sst::cx(font), BLACK);
-    DrawRectangle(sst::cx(20), sst::cy(134), sst::cx(400), sst::cy(70), WHITE);
-    DrawRectangleLines(sst::cx(20), sst::cy(134), sst::cx(400), sst::cy(70), BLACK);
-    DrawText(username, sst::cx(40), sst::cy(142), sst::cx(font), MAROON);
+    DrawText(text.c_str(), sst::cx(20), sst::cy(100), sst::cx(font), BLACK);
+    
+    // Draw textInput with red highlight when hovered
+    int linethickness = 2;
+    DrawRectangle(sst::cx(20), sst::cy(150), sst::cx(400), sst::cy(70), WHITE);
+    DrawRectangleLinesEx({sst::cxf(20), sst::cyf(150), sst::cxf(400), sst::cyf(70)}, 
+                        sst::cx(linethickness), 
+                        buttons[1].isHovered(mouse) ? RED : BLACK);
+    DrawText(username, sst::cx(40), sst::cy(158), sst::cx(font), MAROON);
 
+    // Draw error message if username is empty
+    if (usernameLetterCount == 0) {
+        font = 20;
+        text = "Username must be at least 1 character";
+        DrawText(text.c_str(), sst::cx(20), sst::cy(230), sst::cx(font), RED);
+    }
+
+    // Draw warning text when editing
+    if (isModifyingUsername)
+    {
+        text = "Must Finish Editing Before Continuing/Leaving";
+        font = 20;
+        DrawText(text.c_str(), sst::cx(centerTextX(text, font)), sst::cy(centerTextY(text, font) - 275), sst::cx(font), MAROON);
+    }
+
+    font = 50;
     // Draw Game Settings
     int yPosition = 270;
     text = "Difficulty:";
@@ -157,7 +178,7 @@ void HostMultiplayerMenu::draw()
     DrawText(playerLimitText.c_str(), sst::cx(450), sst::cy(yPosition+64+8), sst::cx(font), BLACK);
 
     // Draw Create Room Button
-    text = "Create Room (WIP)";
+    text = "Create Room";
     DrawText(text.c_str(), sst::cx(620), sst::cy(yPosition+64+8), sst::cx(font), buttons[10].isHovered(mouse) ? RED : BLACK);
 }
 
@@ -203,9 +224,12 @@ GuiEvent HostMultiplayerMenu::updateMenuLogic()
                     // Placeholder
                     break;
                 case HMMB_CreateRoom:
-                    // TODO: Create room (Blank Lobby files)
-                    // Level settings and username from here will be passed to the lobby
+                    // Level settings and username from here are passed to the lobby
                     // In the lobby, the joinable room will be created according to multiplayer logic
+                    // Only allow creating room if username is not empty
+                    if (usernameLetterCount > 0) {
+                        return CreateLobby;
+                    }
                     break;
             }
         }
