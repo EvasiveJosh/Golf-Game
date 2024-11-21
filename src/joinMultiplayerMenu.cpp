@@ -62,15 +62,15 @@ void JoinMultiplayerMenu::draw()
     int linethickness = 2;
     font = 50;
     DrawRectangle(sst::cx(usernameTextBox.x), sst::cy(usernameTextBox.y), sst::cx(usernameTextBox.width), sst::cy(usernameTextBox.height), WHITE);
-    DrawRectangleLinesEx({sst::cxf(usernameTextBox.x), sst::cyf(usernameTextBox.y), sst::cxf(usernameTextBox.width), sst::cyf(usernameTextBox.height)}, sst::cx(linethickness), buttons[1].isHovered(mouse) ? RED : BLACK);
+    DrawRectangleLinesEx({sst::cxf(usernameTextBox.x), sst::cyf(usernameTextBox.y), sst::cxf(usernameTextBox.width), sst::cyf(usernameTextBox.height)}, sst::cx(linethickness), isModifyingUsername ? RED : buttons[1].isHovered(mouse) ? RED : BLACK);
     DrawText(username, sst::cx((int)usernameTextBox.x + 20), sst::cy((int)usernameTextBox.y + 8), sst::cx(font), MAROON);
 
     DrawRectangle(sst::cx(hostnameTextBox.x), sst::cy(hostnameTextBox.y), sst::cx(hostnameTextBox.width), sst::cy(hostnameTextBox.height), WHITE);
-    DrawRectangleLinesEx({sst::cxf(hostnameTextBox.x), sst::cyf(hostnameTextBox.y), sst::cxf(hostnameTextBox.width), sst::cyf(hostnameTextBox.height)}, sst::cx(linethickness), buttons[2].isHovered(mouse) ? RED : BLACK);
+    DrawRectangleLinesEx({sst::cxf(hostnameTextBox.x), sst::cyf(hostnameTextBox.y), sst::cxf(hostnameTextBox.width), sst::cyf(hostnameTextBox.height)}, sst::cx(linethickness), isModifyingHostname ? RED : buttons[2].isHovered(mouse) ? RED : BLACK);
     DrawText(hostname, sst::cx((int)hostnameTextBox.x + 20), sst::cy((int)hostnameTextBox.y + 8), sst::cx(font), MAROON);
 
     DrawRectangleRec({sst::cxf(ipAddressTextBox.x), sst::cyf(ipAddressTextBox.y), sst::cxf(ipAddressTextBox.width), sst::cyf(ipAddressTextBox.height)}, WHITE);
-    DrawRectangleLinesEx({sst::cxf(ipAddressTextBox.x), sst::cyf(ipAddressTextBox.y), sst::cxf(ipAddressTextBox.width), sst::cyf(ipAddressTextBox.height)}, sst::cx(linethickness), buttons[3].isHovered(mouse) ? RED : BLACK);
+    DrawRectangleLinesEx({sst::cxf(ipAddressTextBox.x), sst::cyf(ipAddressTextBox.y), sst::cxf(ipAddressTextBox.width), sst::cyf(ipAddressTextBox.height)}, sst::cx(linethickness), isModifyingIPAddress ? RED : buttons[3].isHovered(mouse) ? RED : BLACK);
     DrawText(ipAddress, sst::cx((int)ipAddressTextBox.x + 20), sst::cy((int)ipAddressTextBox.y + 8), sst::cx(font), MAROON);
 
     if (isModifyingUsername || isModifyingHostname || isModifyingIPAddress)
