@@ -186,7 +186,7 @@ GuiEvent SingleplayerMatch::updateLogic()
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
-            golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
+            golfball.updateVelocity({(dragVector.x * LAUNCH_SCALE) / sst::cxf(1), (dragVector.y * LAUNCH_SCALE) / sst::cyf(1)});
             golfball.isDragging = false;
             golfball.isRolling = (wind == 3);
             golfball.updateLogic();
