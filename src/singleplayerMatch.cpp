@@ -9,7 +9,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     this->endlessMode = !info[2];
     end = false;
     Terrain terrainGenerator;
-    terrain = terrainGenerator.DrawTerrain(difficulty);
+    
     //Load mouse
     mouse = Mouse();
     //Load golfball
@@ -36,7 +36,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 
     //initialize flag
     flag = Flag(sst::baseX - 169, sst::baseY - GRASS_HEIGHT-189, 1.0f); //constructed flag object
-
+    terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
     camera.offset = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Center of the screen

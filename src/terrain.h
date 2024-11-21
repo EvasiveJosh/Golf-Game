@@ -9,6 +9,7 @@
 #include "vector"
 #include <cstdlib>
 #include <ctime>  
+#include "flag.h"
 
 
 class TerrainSquare{
@@ -31,7 +32,7 @@ class Terrain{
     private:
         int difficulty;
     public:
-        std::vector<TerrainSquare> DrawTerrain(int difficulty);
+        std::vector<TerrainSquare> GenerateTerrain(int difficulty,Ball& golfball, const Flag& flag);
 };
 
 #endif

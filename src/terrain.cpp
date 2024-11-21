@@ -26,9 +26,9 @@ int TerrainSquare::getWidth() const{
     return width;
 }
 
-vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
-    Ball golfball;
+vector<TerrainSquare> Terrain::GenerateTerrain(int difficulty, Ball& golfball, const Flag& flag){
     Vector2 ballPosVec = golfball.getBallPosition();
+    Vector2 flagposVec = flag.getPosition();
     int levelSize = 0;
     if(difficulty == 0){ //difficulty easy
         levelSize = 8;
@@ -39,15 +39,19 @@ vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
     else{ //difficulty hard
         levelSize = 12;
     }
+    //get the width between the ball and flag
+    int totalWidth = sst::cx(flagposVec.x) - sst::cx(ballPosVec.x + 50);
+    //get the width that each segment can be and fit in the level size
+    int segmentWidth = totalWidth/levelSize;
+    //starting x position for segment
     int x = sst::cx(ballPosVec.x+50);
     vector<TerrainSquare> terrain; //vector that holds the segment objects
     srand(time(0));
     for(int i = 0; i<levelSize ;i++){
         int randomHeight = rand() % 150 + 30;
-        int width = 100;
-        TerrainSquare temp(randomHeight,x,width,i+1);
+        TerrainSquare temp(randomHeight,x,segmentWidth,i+1);
         terrain.push_back(temp);
-        x += width;
+        x += segmentWidth;
     }
 
     return terrain;
