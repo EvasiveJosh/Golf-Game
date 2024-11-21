@@ -40,6 +40,7 @@ class Program
         std::unique_ptr<Match> currentMatch;
         GameMusic currentMusic;
         userSettings settings;
+        std::vector<int> gameSettings;
         
     public:
         Program();

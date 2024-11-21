@@ -13,6 +13,7 @@ Program::Program() : currentMusic(), settings()
     currentMenu = std::make_unique<StartMenu>();
     inSingleplayerGame = false;
     bool inMultiplayerGame = false;
+    gameSettings = std::vector<int>();
 
 }
 
@@ -37,35 +38,37 @@ void Program::loop()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        if (inSingleplayerGame)
+        // Drawing updates
+        if (inSingleplayerGame && currentMatch)
         {
-            if (currentMatch)
-            {
-                currentMatch->draw(); // Always draw the game
-                if (debug)
-                    currentMatch->drawDebug();
+            currentMatch->draw(); // Always draw the game
+            if (debug)
+                currentMatch->drawDebug();
 
-                if (currentMenu) // If a menu is active, draw it on top
-                {
-                    currentMenu->draw();
-                    updateLogic(currentMenu->updateMenuLogic());
-                }
-                else // If no menu, update game logic
-                {
-                    updateLogic(currentMatch->updateLogic());
-                }
-            }
+            if (currentMenu) // If a menu is active, draw it on top
+                currentMenu->draw();
         }
         else if (currentMenu)
         {
             currentMenu->draw();
             if (debug)
                 currentMenu->drawDebug();
-            updateLogic(currentMenu->updateMenuLogic());
         }
 
         EndDrawing();
 
+        // Logic updates
+        if (inSingleplayerGame && currentMatch)
+        {
+            if (currentMenu) // If a menu is active, update its logic
+                updateLogic(currentMenu->updateMenuLogic());
+            else // If no menu, update game logic
+                updateLogic(currentMatch->updateLogic());
+        }
+        else if (currentMenu)
+        {
+            updateLogic(currentMenu->updateMenuLogic());
+        }
     }
 }
 
@@ -87,6 +90,7 @@ void Program::updateLogic(GuiEvent state)
                 currentMatch = nullptr;
                 inSingleplayerGame = false;
             }
+            gameSettings.clear(); // Reset game settings when opening the starting menu
             this->currentMenu = std::make_unique<StartMenu>();
             break;
         case OpenMultiplayerMenu:
@@ -133,7 +137,12 @@ void Program::updateLogic(GuiEvent state)
 
         case StartSingleplayerGame:
             inSingleplayerGame = true;
-            currentMatch = std::make_unique<SingleplayerMatch>(this->currentMenu->getInformation());
+            if (currentMenu && dynamic_cast<SingleplayerGameSettingsMenu*>(currentMenu.get())) {
+                // If coming from settings menu, get new settings
+                gameSettings = this->currentMenu->getInformation();
+            }
+            // Otherwise use existing gameSettings
+            currentMatch = std::make_unique<SingleplayerMatch>(gameSettings);
             currentMenu = nullptr;
             break;
         
