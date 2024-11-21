@@ -42,6 +42,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     cameraShouldFollowBall = false;
     cameraShouldCenter = false;
     smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
+    defaultZoom = 1.0f;
 }
 
 void SingleplayerMatch::draw()
@@ -251,26 +252,30 @@ void SingleplayerMatch::updateCamera() {
     // Camera centered (when `cameraShouldCenter` is true)
     if (cameraShouldCenter) {
         Vector2 targetPosition = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)};
-        float targetZoom = 1.0f;
+        float centerZoom = 1.0f;
 
         // Smoothly move the camera towards the center position
         camera.target.x += (targetPosition.x - camera.target.x) * smoothingFactor;
         camera.target.y += (targetPosition.y - camera.target.y) * smoothingFactor;
+        defaultZoom = centerZoom;
 
         // Default zoom unless scrollwheel moves
         if(GetMouseWheelMove() != 0) {
             cameraShouldCenter = false;
         } else {
-            camera.zoom += (targetZoom - camera.zoom) * smoothingFactor;
+            camera.zoom += (centerZoom - camera.zoom) * smoothingFactor;
         }
     }
 
-    // Zoom camera (mouse wheel)
-    camera.zoom += GetMouseWheelMove() * 0.25f;
+    // Update desired zoom level when the mouse wheel moves
+    defaultZoom += GetMouseWheelMove() * 0.25f;
 
-    // Limit zoom range
-    if (camera.zoom < 0.5f) camera.zoom = 0.5f;
-    if (camera.zoom > 10.0f) camera.zoom = 10.0f;
+    // Limit the desired zoom range
+    if (defaultZoom < 0.5f) defaultZoom = 0.5f;
+    if (defaultZoom > 10.0f) defaultZoom = 10.0f;
+
+    // Smoothly transition the current zoom to the desired zoom level
+    camera.zoom += (defaultZoom - camera.zoom) * smoothingFactor;
 }
 
 int SingleplayerMatch::getShotCount() const 
