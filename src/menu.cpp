@@ -81,7 +81,7 @@ std::vector<int> Menu::getInformation()
     return {-1};
 }
 
-const float& Menu::getVolumeLevel()
+const float Menu::getVolumeLevel()
 {
     //Does nothing by default
     return 0.0f;

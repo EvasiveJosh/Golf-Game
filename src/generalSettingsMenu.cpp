@@ -168,7 +168,7 @@ GuiEvent GeneralSettingsMenu::updateMenuLogic()
     return SetVolume;
 }
 
-const float& GeneralSettingsMenu::getVolumeLevel()
+const float GeneralSettingsMenu::getVolumeLevel()
 {
     return volumeLevel;
 }

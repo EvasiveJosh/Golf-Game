@@ -30,7 +30,7 @@ class GeneralSettingsMenu : public Menu
         void draw() override;
         GuiEvent updateMenuLogic() override;
         void drawDebug() override;
-        const float& getVolumeLevel() override;
+        const float getVolumeLevel() override;
 };
 
 #endif

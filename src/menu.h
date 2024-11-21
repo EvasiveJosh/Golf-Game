@@ -52,7 +52,7 @@ class Menu
         virtual std::string getHostName();
         virtual std::string getIpAddress();
         virtual std::vector<int> getInformation();
-        virtual const float& getVolumeLevel(); //Used in generalSettingsMenu
+        virtual const float getVolumeLevel(); //Used in generalSettingsMenu
 
         //Adds a button based off text
         void addButton(const std::string& label, int font, int posX, int posY);

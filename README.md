@@ -28,6 +28,9 @@
         - Make option for it to center on the ball (just use position of ball)
         - Debug view needs to be overhauled. It needs to stay put when the camera moves (rn it moves with the camera)
 
+# Final Testing Guide
+Go in CMakeLists.txt and uncomment lines 90 through 96. Fix all the errors. (Line 97 is there for Thomas's sake as he can't handle the one warning from raygui.h)
+
 
 # Golf-Game
 
