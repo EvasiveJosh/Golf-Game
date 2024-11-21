@@ -28,7 +28,7 @@ int TerrainSquare::getWidth() const{
 
 vector<TerrainSquare> Terrain::DrawTerrain(int difficulty){
     Ball golfball;
-    Vector2 ballPosVec = golfball.getBallPosition();
+    Vector2 ballPosVec = golfball.getPosition();
     int levelSize = 0;
     if(difficulty == 0){ //difficulty easy
         levelSize = 8;

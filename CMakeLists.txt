@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Add sources and headers
+#[[
 set(SOURCES
     src/main.cpp
     src/program.cpp
@@ -52,6 +53,10 @@ set(HEADERS
     src/singleplayerWinMenu.h
     src/singleplayerPauseMenu.h
 )
+]]
+
+file(GLOB HEADERS "src/*.h")
+file(GLOB SOURCES "src/*.cpp")
 
 add_compile_options(
     -static 

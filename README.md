@@ -1,5 +1,10 @@
 # TODO
 
+
+
+
+
+
 1. Ball physics updating and drawing needs an overhaul. As of now, it breaks on any other resolution other than 720p. Class needs to incorporate sst functions.
 2. Overhaul the screen settings to use the new userSettings class
 3. the "singleplayerWinMenu.h" and "singleplayerWinMenu.cpp" needs to be implemented.

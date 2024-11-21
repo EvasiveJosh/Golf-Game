@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "math.h"
 #include "screenSizeTransfer.h"
+#include "physicsObject.h"
 
 /*
 Once terrain class exists, send the terrain position to updatePhysics() and through checkCollisions
@@ -19,14 +20,9 @@ const float LAUNCH_SCALE = 0.25f;
 const float BALL_RADIUS = 12.0f;
 const float GRASS_HEIGHT = 160.0f; //Minimum height
 
-class Ball
+class Ball : public PhysicsObject
 {
     private:
-        //Position and movement variables
-        Vector2 ballPosition;
-        Vector2 velocity;
-        Vector2 previousStartPosition;
-        bool isOutOfBounds;
 
         //Stats
         int shotCount;
@@ -42,10 +38,9 @@ class Ball
         bool isRolling;
         bool isStopped;
 
-        Ball();
-        Ball(CLITERAL(Color) color);
+        Ball(CLITERAL(Color) color=WHITE);
         //Draws the ball on the screen
-        void draw();
+        void draw() override;
         void drawDebug();
         void checkCollisions();
         void applyFriction();

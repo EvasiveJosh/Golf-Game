@@ -1,25 +1,13 @@
 // Game.cpp
 #include "ball.h"
-
-Ball::Ball()
-{
-    ballPosition = {BALL_RADIUS + 80, sst::baseY - BALL_RADIUS - GRASS_HEIGHT };
-    previousStartPosition = ballPosition;
-    velocity = { 0, 0 };
-    isRolling = false;
-    isDragging = false;
-    isStopped = true;
-    shotCount = 0;
-    bool isOutOfBounds = false;
-    ballColor = WHITE;
-}
-
 Ball::Ball(CLITERAL(Color) color)
 {
-    ballPosition = {BALL_RADIUS + 80, sst::baseY - BALL_RADIUS - GRASS_HEIGHT };
-    previousStartPosition = ballPosition;
-    velocity = { 0, 0 };
-    isRolling = false;
+    this->setPosition({BALL_RADIUS + 80, sst::baseY - BALL_RADIUS - GRASS_HEIGHT });
+    this->setVelocity({0, 0});
+    this->setAcceleration({0, 0});
+    this->setRotation(0);
+    this->setAngularVelocity(0);
+    this->setShape(Shape::CIRCLE);
     isDragging = false;
     isStopped = true;
     shotCount = 0;
@@ -30,8 +18,12 @@ Ball::Ball(CLITERAL(Color) color)
 void Ball::draw()
 {
     // Draw ball
-    DrawCircleV({sst::cxf(ballPosition.x), sst::cyf(ballPosition.y)}, sst::cx(BALL_RADIUS), ballColor);
-    DrawCircleLines(sst::cxf(ballPosition.x), sst::cyf(ballPosition.y), sst::cx(BALL_RADIUS), BLACK);
+
+    float ballpositionX = this->getPosition().x;
+    float ballpositionY = this->getPosition().y;
+
+    DrawCircleV({sst::cxf(ballpositionX), sst::cyf(ballpositionY)}, sst::cx(BALL_RADIUS), ballColor);
+    DrawCircleLines(sst::cxf(ballpositionX), sst::cyf(ballpositionY), sst::cx(BALL_RADIUS), BLACK);
 
     // Draw drag line
     if (isDragging) {
@@ -52,7 +44,7 @@ void Ball::drawDebug()
     DrawText(TextFormat("Shots: %d", shotCount), sst::cx(0), sst::cy(sst::baseY - 100), sst::cx(font), BLACK);
     DrawText(TextFormat("isRolling: %i", static_cast<int>(isRolling)), sst::cx(0), sst::cy(sst::baseY - 50), sst::cx(font), BLACK);
 }
-
+/*
 void Ball::updatePhysics()
 {
     isStopped = (velocity.x == 0 && velocity.y == 0);
@@ -72,6 +64,8 @@ void Ball::updatePhysics()
         applyFriction();
     }
 }
+
+
 
 void Ball::checkCollisions()
 {
@@ -143,7 +137,7 @@ void Ball::updateVelocity(Vector2 newVel)
 {
     velocity = newVel;
 }
-
+*/
 int Ball::getShotCount() const
 {
     return shotCount;

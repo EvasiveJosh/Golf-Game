@@ -13,7 +13,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     //Load mouse
     mouse = Mouse();
     //Load golfball
-    golfball = Ball(WHITE);
+    Ball golfball(WHITE); 
     // To align hole png and hitbox, flag image is basex - 98, hole box is basex -169,
     // so flag image must be -71 more than hole to align assuming the flag scale is not changed.
     // For the y axis, the hole is -10, the flag is -189 to align. So the flag image must
@@ -24,7 +24,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     // When this happens, the hole hitbox will need to be lowered below the flag image.
 
     //Create golfballButton
-    Vector2 ballPosVec = golfball.getBallPosition();
+    Vector2 ballPosVec = golfball.getPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
     addButton("Hole", {sst::baseX - 98, sst::baseY - GRASS_HEIGHT - 10, 15, 15}); //Do not modify without notifying (I modified this see note above - Gabriel)
@@ -101,8 +101,8 @@ GuiEvent SingleplayerMatch::updateLogic()
     
     //General logic to be checked here
     mouse.updateMousePosition();
-    golfball.updatePhysics();
-    Vector2 ballPosVec = golfball.getBallPosition();
+    golfball.update();
+    Vector2 ballPosVec = golfball.getPosition();
     buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
 
     // Update camera logic
@@ -125,19 +125,19 @@ GuiEvent SingleplayerMatch::updateLogic()
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !golfball.isDragging)
         {
             // Convert ball world position to screen position
-            Vector2 screenBallPosition = GetWorldToScreen2D(golfball.getBallPosition(), camera);
+            Vector2 screenBallPosition = GetWorldToScreen2D(golfball.getPosition(), camera);
 
             // Check if mouse position is inside the ball's screen-space bounds
             float ballScreenRadius = BALL_RADIUS * camera.zoom; // Scale the radius by zoom level
             if (CheckCollisionPointCircle(mouse.position(), screenBallPosition, ballScreenRadius))
             {
                 golfball.isDragging = true;
-                golfball.startDrag = golfball.getBallPosition();
+                golfball.startDrag = golfball.getPosition();
                 golfball.currentDrag = GetScreenToWorld2D({
                     mouse.position().x / sst::cxf(1),
                     mouse.position().y / sst::cyf(1)
                 }, camera);
-                golfball.updateVelocity({0,0});
+                golfball.setVelocity({0,0});
             }
         } 
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
@@ -150,13 +150,13 @@ GuiEvent SingleplayerMatch::updateLogic()
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
-            golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
+            golfball.setVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
             if (wind == 3)
                 golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
             else
                 golfball.isRolling = false;
-            golfball.updateLogic();
+            golfball.update();
         }
     }
     return Nothing;
@@ -208,8 +208,8 @@ void SingleplayerMatch::updateCamera() {
     if (cameraShouldFollowBall) {
         // Get the ball's position (target for the camera)
         Vector2 targetPosition = {
-            sst::cxf(golfball.getBallPosition().x),
-            sst::cyf(golfball.getBallPosition().y)
+            sst::cxf(golfball.getPosition().x),
+            sst::cyf(golfball.getPosition().y)
         };
         // Smoothly move the camera towards the ball's position
         camera.target.x += (targetPosition.x - camera.target.x) * smoothingFactor;
