@@ -8,14 +8,7 @@
 #include "GuiEnum.h"
 #include "mouse.h"
 #include "menu.h"
-#include "startMenu.h"
-#include "generalSettingsMenu.h"
-#include "multiplayerMenu.h"
-#include "joinMultiplayerMenu.h"
-#include "singleplayerGameSettingsMenu.h"
-#include "singleplayerWinMenu.h"
-#include "singleplayerPauseMenu.h"
-#include "hostMultiplayerMenu.h"
+
 //Actual Game windows
 #include "match.h"
 #include "singleplayerMatch.h"

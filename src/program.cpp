@@ -1,4 +1,16 @@
 #include "program.h"
+#include "startMenu.h"
+#include "generalSettingsMenu.h"
+#include "multiplayerMenu.h"
+#include "joinMultiplayerMenu.h"
+#include "singleplayerGameSettingsMenu.h"
+#include "singleplayerWinMenu.h"
+#include "singleplayerPauseMenu.h"
+#include "hostMultiplayerMenu.h"
+//Threads
+#include <thread>
+#include <chrono>
+#include <atomic>
 
 
 Program::Program() : currentMusic(), settings()
@@ -25,10 +37,17 @@ void Program::close()
 
 void Program::loop()
 {
+    std::atomic<bool> running(true);
+    std::thread musicThread([&] {
+        while(running.load()) 
+        {
+            currentMusic.update();
+            std::this_thread::sleep_for(std::chrono::milliseconds(17)); // Approximation of 16.667 ms
+        }
+    });
+
     while (!end)
-    {
-        currentMusic.update();
-        
+    {   
         if (IsKeyPressed(KEY_ESCAPE) || WindowShouldClose()) // For testing purposes
             end = true;
         
@@ -70,6 +89,8 @@ void Program::loop()
             updateLogic(currentMenu->updateMenuLogic());
         }
     }
+    running.store(false);
+    musicThread.join();
 }
 
 void Program::updateLogic(GuiEvent state)
