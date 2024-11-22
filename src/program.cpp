@@ -8,6 +8,7 @@
 #include "singleplayerPauseMenu.h"
 #include "hostMultiplayerMenu.h"
 #include "lobby.h"
+#include "keybind.h"
 //Threads
 #include <thread>
 #include <chrono>
@@ -53,7 +54,7 @@ void Program::loop()
         if (IsKeyPressed(KEY_ESCAPE) || WindowShouldClose()) // For testing purposes
             end = true;
         
-        if (IsKeyPressed(KEY_P))
+        if (keybinds.IsPressed("Debug"))
             debug = !debug;
         
         BeginDrawing();
