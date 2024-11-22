@@ -11,6 +11,7 @@
 #include "terrain.h"
 #include "vector"
 #include "flag.h"
+#include "keybind.h"
 
 /*
 TODO:

@@ -46,7 +46,7 @@ void SingleplayerPauseMenu::draw()
 GuiEvent SingleplayerPauseMenu::updateMenuLogic()
 {
     mouse.updateMousePosition(); // Update mouse position
-    if (IsKeyPressed(KEY_GRAVE))
+    if (keybinds.IsPressed("Pause"))
         return ResumeGame;
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))

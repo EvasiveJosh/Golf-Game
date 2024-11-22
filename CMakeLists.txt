@@ -30,6 +30,7 @@ set(SOURCES
     src/hostMultiplayerMenu.cpp
     src/lobby.cpp
     src/flag.cpp
+    src/keybind.cpp
 )
 
 set(HEADERS
@@ -57,6 +58,7 @@ set(HEADERS
     src/hostMultiplayerMenu.h
     src/lobby.h
     src/flag.h
+    src/keybind.h
 )
 
 add_compile_options(

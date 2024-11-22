@@ -135,7 +135,7 @@ void SingleplayerMatch::drawDebug()
 
 GuiEvent SingleplayerMatch::updateLogic()
 {   
-    if (IsKeyPressed(KEY_GRAVE)) // Use grave key as the pause hotkey
+    if (keybinds.IsPressed("Pause")) // Use grave key as the pause hotkey
     {
         isPaused = !isPaused;
         return isPaused ? PauseGame : ResumeGame;
@@ -205,22 +205,22 @@ void SingleplayerMatch::updateCamera() {
     Vector2 desiredTarget = camera.target;
 
     // Handle panning controls (camera movement when keys are held down)
-    if (IsKeyDown(KEY_A)) {
+    if (keybinds.IsDown("CamLeft")) {
         desiredTarget.x -= sst::cx(100);  // Move camera left (increase speed)
         cameraShouldFollowBall = false;  // Stop following
         cameraShouldCenter = false; // Stop center
     }
-    if (IsKeyDown(KEY_D)) {
+    if (keybinds.IsDown("CamRight")) {
         desiredTarget.x += sst::cx(100);  // Move camera right (increase speed)
         cameraShouldFollowBall = false;  // Stop following
         cameraShouldCenter = false; // Stop center
     }
-    if (IsKeyDown(KEY_W)) {
+    if (keybinds.IsDown("CamUp")) {
         desiredTarget.y -= sst::cy(100);  // Move camera up (increase speed)
         cameraShouldFollowBall = false;  // Stop following
         cameraShouldCenter = false; // Stop center
     }
-    if (IsKeyDown(KEY_S)) {
+    if (keybinds.IsDown("CamDown")) {
         desiredTarget.y += sst::cy(100);  // Move camera down (increase speed)
         cameraShouldFollowBall = false;  // Stop following
         cameraShouldCenter = false; // Stop center
@@ -231,13 +231,13 @@ void SingleplayerMatch::updateCamera() {
     camera.target.y += (desiredTarget.y - camera.target.y) * smoothingFactor;
 
     // Reset to follow the ball when `KEY_F` is pressed
-    if (IsKeyPressed(KEY_F)) {
+    if (keybinds.IsPressed("CamFollow")) {
         cameraShouldCenter = false;
         cameraShouldFollowBall = !cameraShouldFollowBall;
     }
 
     // Reset to follow centre when 'KEY_C' is pressed
-    if (IsKeyPressed(KEY_C)) {
+    if (keybinds.IsPressed("CamCenter")) {
         cameraShouldFollowBall = false;
         cameraShouldCenter = !cameraShouldCenter;
     }

@@ -2,6 +2,7 @@
 #define SINGLEPLAYERPAUSEMENU_H
 
 #include "menu.h"
+#include "keybind.h"
 #include <iostream>
 
 class SingleplayerPauseMenu : public Menu
