@@ -57,7 +57,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
     cameraShouldFollowBall = false;
-    cameraShouldCenter = false;
+    cameraShouldCenter = true;
     smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
     defaultZoom = 1.0f;
     
