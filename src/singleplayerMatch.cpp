@@ -1,5 +1,6 @@
 #include "singleplayerMatch.h"
 #include "singleplayerPauseMenu.h"
+#include "rectangle.h"
 
 SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 {
@@ -51,23 +52,32 @@ void SingleplayerMatch::draw()
     BeginMode2D(camera);
 
     //base terrain
-    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+    //DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+    Rect Test1(100,100,GREEN);
+    Test1.setPosition({0,0});
+    Test1.draw();
+    Rect Test2(100,100,BLUE);
+    Test2.setPosition({150,150});
+    Test2.draw();
+    Rect Test3(100,100,RED);
+    Test3.setPosition({300,300});
+    Test3.draw();
 
     DrawCircle(10,10,3,RED);
     //Draw some default sky
-    DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
+    //DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
     //Draw flag
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
-
+    /*
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int posX = square.getPosX();
         int width = square.getWidth();
         DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
     }
-    
+    */
     // Draw other elements (e.g., golfball)
     golfball.draw();
 
@@ -174,12 +184,12 @@ GuiEvent SingleplayerMatch::updateLogic()
             if (CheckCollisionPointCircle(mouseWorldPos, scaledBallPos, scaledRadius))
             {
                 golfball.isDragging = true;
-                golfball.startDrag = golfball.getBallPosition();
+                golfball.startDrag = golfball.getPosition();
                 golfball.currentDrag = GetScreenToWorld2D({
                     mouse.position().x / sst::cxf(1),
                     mouse.position().y / sst::cyf(1)
                 }, camera);
-                golfball.updateVelocity({0,0});
+                golfball.setVelocity({0,0});
             }
         }
         else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
@@ -189,13 +199,13 @@ GuiEvent SingleplayerMatch::updateLogic()
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
         {
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
-            golfball.updateVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
+            golfball.setVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
             if (wind == 3)
                 golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
             else
                 golfball.isRolling = false;
-            golfball.updateLogic();
+            //golfball.updateLogic();
         }
     }
     return Nothing;

@@ -59,6 +59,8 @@ set(HEADERS
 )
 ]]
 
+set(SOURCES src/rectangle.cpp)
+
 file(GLOB HEADERS "src/*.h")
 file(GLOB SOURCES "src/*.cpp")
 
