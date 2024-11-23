@@ -68,13 +68,14 @@ void SingleplayerMatch::draw()
     // Begin using the camera for scaling world elements
     BeginMode2D(camera);
 
-    //base terrain
-    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), 
-                 sst::cx(sst::baseX*levelScale), sst::cyf(GRASS_HEIGHT), GREEN);
-
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), 
                  sst::cx(sst::baseX*levelScale), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
+
+    //base terrain
+    DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), 
+                 sst::cx(sst::baseX*levelScale), sst::cyf(GRASS_HEIGHT + 400), GREEN);
+
 
     //draw flag
     flag.draw();
@@ -84,8 +85,8 @@ void SingleplayerMatch::draw()
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight() + 1;
         DrawRectangle(sst::cxf(square.getPosX()), 
                      sst::cyf(yPos),
-                     sst::cxf(square.getWidth()),
-                     sst::cyf(square.getHeight()),
+                     sst::cxf(square.getWidth() + 1),
+                     sst::cyf(square.getHeight() + 1),
                      GREEN);
     }
     
