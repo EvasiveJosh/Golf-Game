@@ -50,6 +50,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 
     //vector holding terrain segments
     terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
+    
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
     camera.offset = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Center of the screen
@@ -158,7 +159,7 @@ GuiEvent SingleplayerMatch::updateLogic()
     
     //General logic to be checked here
     mouse.updateMousePosition();
-    golfball.updatePhysics();
+    golfball.updatePhysics(terrain);
     Vector2 ballPosVec = golfball.getBallPosition();
     buttons[0].updateButtonBounds({ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
 

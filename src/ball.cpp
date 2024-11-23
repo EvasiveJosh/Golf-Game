@@ -53,7 +53,7 @@ void Ball::drawDebug()
     DrawText(TextFormat("isRolling: %i", static_cast<int>(isRolling)), sst::cx(0), sst::cy(sst::baseY - 50), sst::cx(font), BLACK);
 }
 
-void Ball::updatePhysics()
+void Ball::updatePhysics(const std::vector<TerrainSquare>& terrain)
 {
     isStopped = (velocity.x == 0 && velocity.y == 0);
 
@@ -66,14 +66,14 @@ void Ball::updatePhysics()
         velocity.y += GRAVITY;
 
         //Check for collisions
-        checkCollisions();
+        checkCollisions(terrain);
 
         //Apply friction if rolling
         applyFriction();
     }
 }
 
-void Ball::checkCollisions()
+void Ball::checkCollisions(const std::vector<TerrainSquare>& terrain)
 {
     // Base screen dimensions
     float screenWidthBase = sst::baseX * scale;
@@ -113,6 +113,66 @@ void Ball::checkCollisions()
     {
         ballPosition.y = BALL_RADIUS;
         velocity.y *= -DAMPING;
+    }
+
+    // Terrain collisions
+    for (const TerrainSquare& square : terrain) 
+    {
+        int squareX = square.getPosX();
+        int squareWidth = square.getWidth();
+        int squareY = sst::baseY - GRASS_HEIGHT - square.getHeight();
+        int squareHeight = square.getHeight();
+
+        // Check if the ball is intersecting the terrain square
+        bool withinXBounds = (ballPosition.x + BALL_RADIUS > squareX) && (ballPosition.x - BALL_RADIUS < squareX + squareWidth);
+        bool withinYBounds = (ballPosition.y + BALL_RADIUS > squareY) && (ballPosition.y - BALL_RADIUS < squareY + squareHeight);
+
+        if (withinXBounds && withinYBounds) 
+        {
+            // Check which side the ball is colliding with and adjust accordingly
+            float overlapTop = (squareY - (ballPosition.y + BALL_RADIUS));
+            float overlapBottom = ((ballPosition.y - BALL_RADIUS) - (squareY + squareHeight));
+            float overlapLeft = (squareX - (ballPosition.x + BALL_RADIUS));
+            float overlapRight = ((ballPosition.x - BALL_RADIUS) - (squareX + squareWidth));
+
+            // Determine the smallest overlap to resolve collision
+            float smallestOverlap = fmin(fabs(overlapTop), fmin(fabs(overlapBottom), fmin(fabs(overlapLeft), fabs(overlapRight))));
+
+
+            if (smallestOverlap == fabs(overlapTop)) 
+            {
+                // Collision with the top of the square
+                ballPosition.y = squareY - BALL_RADIUS;
+                if (fabs(velocity.y) < STOP_THRESHOLD) 
+                {
+                    velocity.y = 0;
+                    isRolling = true;
+                } 
+                else 
+                {
+                    velocity.y *= -DAMPING;
+                    isRolling = false;
+                }
+            } 
+            else if (smallestOverlap == fabs(overlapBottom)) 
+            {
+                // Collision with the bottom of the square
+                ballPosition.y = squareY + squareHeight + BALL_RADIUS;
+                velocity.y *= -DAMPING;
+            } 
+            else if (smallestOverlap == fabs(overlapLeft)) 
+            {
+                // Collision with the left side of the square
+                ballPosition.x = squareX - BALL_RADIUS;
+                velocity.x *= -DAMPING;
+            } 
+            else if (smallestOverlap == fabs(overlapRight)) 
+            {
+                // Collision with the right side of the square
+                ballPosition.x = squareX + squareWidth + BALL_RADIUS;
+                velocity.x *= -DAMPING;
+            }
+        }
     }
 }
 

@@ -1,14 +1,19 @@
 #ifndef BALL_H
 #define BALL_H
 
+#include <vector>
 #include "raylib.h"
 #include "math.h"
 #include "screenSizeTransfer.h"
+#include "terrain.h"
 
 /*
 Once terrain class exists, send the terrain position to updatePhysics() and through checkCollisions
 applyFriction will also need to be overhauled to incorporate different terrain friction (if we are doing that)
 */
+
+class Flag;
+class TerrainSquare;
 
 // Constants (built with standard 1280x720 res)
 const float GRAVITY = 0.5f;
@@ -48,9 +53,10 @@ class Ball
         //Draws the ball on the screen
         void draw();
         void drawDebug();
-        void checkCollisions();
+        void drawTerrain(const std::vector<TerrainSquare>& terrain);
+        void checkCollisions(const std::vector<TerrainSquare>& terrain);
         void applyFriction();
-        void updatePhysics();
+        void updatePhysics(const std::vector<TerrainSquare>& terrain);
         //Just used to set the previousStartPosition vector and shot count
         void updateLogic(); 
         void updateVelocity(Vector2 newVel);
