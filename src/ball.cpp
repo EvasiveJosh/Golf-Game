@@ -3,10 +3,6 @@
 Ball::Ball(CLITERAL(Color) color)
 {
     this->setPosition({BALL_RADIUS + 80, sst::baseY - BALL_RADIUS - GRASS_HEIGHT });
-    this->setVelocity({0, 0});
-    this->setAcceleration({0, 0.5});
-    this->setRotation(0);
-    this->setAngularVelocity(0);
     this->setShape(Shape::CIRCLE);
     isDragging = false;
     isStopped = true;

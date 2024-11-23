@@ -5,13 +5,12 @@
 
 class Rect : public PhysicsObject {
     private:
-        int width;
-        int height;
+        int width = 0;
+        int height = 0;
         CLITERAL(Color) fill_color;
 
     public:
-
-        Rect(int w, int h, CLITERAL(Color) color=GREEN);
+        Rect();
 
         void setWidth(int w);
         int getWidth();
@@ -19,6 +18,8 @@ class Rect : public PhysicsObject {
         void setHeight(int h);
         int getHeight();
 
+        void setColor(CLITERAL(Color) color);
+        CLITERAL(Color) getColor();
         void draw();
 };
 

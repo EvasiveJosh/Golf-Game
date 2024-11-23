@@ -1,6 +1,7 @@
 #include "singleplayerMatch.h"
 #include "singleplayerPauseMenu.h"
 #include "rectangle.h"
+#include "physicsCollision.h"
 
 SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
 {
@@ -53,31 +54,32 @@ void SingleplayerMatch::draw()
 
     //base terrain
     //DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
-    Rect Test1(100,100,GREEN);
-    Test1.setPosition({0,0});
-    Test1.draw();
-    Rect Test2(100,100,BLUE);
-    Test2.setPosition({150,150});
-    Test2.draw();
-    Rect Test3(100,100,RED);
-    Test3.setPosition({300,300});
-    Test3.draw();
+    Rect Ground;
+    Ground.setPosition({0,sst::baseY - GRASS_HEIGHT});
+    Ground.setWidth(sst::baseX);
+    Ground.setHeight(GRASS_HEIGHT);
+    Ground.setColor(GREEN);
+    Ground.draw();
+    this->Objects.push_back(&Ground);
 
-    DrawCircle(10,10,3,RED);
     //Draw some default sky
-    //DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
+    DrawRectangle(sst::cx(0), sst::cy(0), sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
     //Draw flag
     DrawTexture(flag.getTexture(0), sst::cx(sst::baseX - 169), sst::cy(sst::baseY - GRASS_HEIGHT - 189), WHITE); //Do not modify without notifying
 
     //draw each terrain segment
-    /*
+    
     for (const TerrainSquare& square : terrain) {
-        int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight();
-        int posX = square.getPosX();
-        int width = square.getWidth();
-        DrawRectangle(sst::cxf(posX), sst::cyf(yPos), sst::cxf(width + 1), sst::cyf(square.getHeight() + 1), GREEN); // Call the draw method for each square
+        Rect terrainPart;
+        terrainPart.setPosition({(float)square.getPosX(), sst::baseY-GRASS_HEIGHT-square.getHeight()});
+        terrainPart.setColor(YELLOW);
+        terrainPart.setWidth(square.getWidth());
+        terrainPart.setHeight(square.getHeight());
+        terrainPart.draw();
+        terrainPart.setShape(Shape::RECTANGLE);
+        this->Objects.push_back(&terrainPart);
     }
-    */
+    
     // Draw other elements (e.g., golfball)
     golfball.draw();
 
@@ -149,7 +151,7 @@ GuiEvent SingleplayerMatch::updateLogic()
     if (isPaused)
         return Nothing;
     
-    //General logic to be checked here
+    // General logic to be checked here
     mouse.updateMousePosition();
     golfball.update();
     Vector2 ballPosVec = golfball.getPosition();
@@ -158,7 +160,7 @@ GuiEvent SingleplayerMatch::updateLogic()
     // Update camera logic
     updateCamera();
 
-    //Check is ball has stopped on hole, if so, you won!
+    // Check if the ball has stopped on the hole, if so, you won!
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
     {
         end = true;
@@ -166,7 +168,7 @@ GuiEvent SingleplayerMatch::updateLogic()
         return OpenSingleplayerWinMenu;
     }
 
-    //Launch the ball check
+    // Launch the ball check
     if (golfball.isStopped)
     {
         // Convert mouse position to world coordinates
@@ -202,12 +204,30 @@ GuiEvent SingleplayerMatch::updateLogic()
             golfball.setVelocity({dragVector.x * LAUNCH_SCALE, dragVector.y * LAUNCH_SCALE});
             golfball.isDragging = false;
             if (wind == 3)
-                golfball.isRolling = true; //A neat little thing happens, the ball slows down drastically in the x direction
+                golfball.isRolling = true; // A neat little thing happens, the ball slows down drastically in the x direction
             else
                 golfball.isRolling = false;
-            //golfball.updateLogic();
         }
     }
+
+    // Handle collisions with all PhysicsObjects in `this->Objects`
+    for (auto& object : this->Objects)
+    {
+        // Skip checking the ball against itself
+        if (object == &golfball)
+            continue;
+
+        PhysicsCollision collisionHandler;
+        std::cout << object->getPosition().x << std::endl;
+        collisionHandler.handleCollision(&golfball, object);
+        std::cout << "Test" << std::endl;
+        // If the ball has stopped, break out of the loop to prevent further movement
+        if (golfball.isStopped)
+        {
+            break;
+        }
+    }
+
     return Nothing;
 }
 

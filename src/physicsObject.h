@@ -6,15 +6,15 @@
 
 class PhysicsObject {
     private:
-        Vector2 position;
-        Vector2 velocity;
-        Vector2 acceleration;
-        float rotation;
-        float angularVelocity;
-        float angularAcceleration;
+        Vector2 position = {0, 0};
+        Vector2 velocity = {0, 0};
+        Vector2 acceleration = {0, 0};
+        float rotation = 0.0f;
+        float angularVelocity = 0.0f;
+        float angularAcceleration = 0.0f;
         enum Shape shape;
 
-        bool hasGravity;
+        bool hasGravity = false;
 
     public:
         virtual void draw() = 0;
@@ -27,6 +27,7 @@ class PhysicsObject {
         void setAngularVelocity(float newAngularVelocity);
         void setAngularAcceleration(float newAngularAcceleration);
         void setShape(enum Shape newShape);
+        void setGravity(bool flag);
 
         Vector2 getPosition();
         Vector2 getVelocity();

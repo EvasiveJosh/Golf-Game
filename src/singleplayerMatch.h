@@ -28,6 +28,7 @@ class SingleplayerMatch : public Match
         Ball golfball;
         bool isPaused;
         float defaultZoom;
+        std::vector<PhysicsObject*> Objects;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;

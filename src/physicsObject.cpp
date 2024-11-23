@@ -41,6 +41,10 @@ void PhysicsObject::setShape(enum Shape newShape){
     this->shape = newShape;
 }
 
+void PhysicsObject::setGravity(bool flag){
+    this->hasGravity = flag;
+}
+
 Vector2 PhysicsObject::getPosition(){
     return this->position;
 }
@@ -63,4 +67,8 @@ float PhysicsObject::getAngularVelocity(){
 
 float PhysicsObject::getAngularAcceleration(){
     return this->angularAcceleration;
+}
+
+enum Shape PhysicsObject::getShape(){
+    return this->shape;  // Added to return the shape of the object
 }
