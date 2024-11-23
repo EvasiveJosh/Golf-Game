@@ -124,38 +124,30 @@ void Ball::checkCollisions(const std::vector<TerrainSquare>& terrain)
         int squareHeight = square.getHeight();
 
         const float edgeTolerance = 0.01f;
+
+        // Check if the ball is intersecting the terrain square
         bool withinXBounds = (ballPosition.x + BALL_RADIUS - edgeTolerance > squareX) &&
                             (ballPosition.x - BALL_RADIUS + edgeTolerance < squareX + squareWidth);
         bool withinYBounds = (ballPosition.y + BALL_RADIUS - edgeTolerance > squareY) &&
                             (ballPosition.y - BALL_RADIUS + edgeTolerance < squareY + squareHeight);
 
-        // Check if the ball is intersecting the terrain square
         if (withinXBounds && withinYBounds) 
         {
-            // Check which side the ball is colliding with and adjust accordingly
+            // Determine overlap distances for all sides
             float overlapTop = (squareY - (ballPosition.y + BALL_RADIUS));
             float overlapBottom = ((ballPosition.y - BALL_RADIUS) - (squareY + squareHeight));
             float overlapLeft = (squareX - (ballPosition.x + BALL_RADIUS));
             float overlapRight = ((ballPosition.x - BALL_RADIUS) - (squareX + squareWidth));
 
-            // Determine the smallest overlap to resolve collision
+            // Find smallest overlap to resolve collision
             float smallestOverlap = fmin(fabs(overlapTop), fmin(fabs(overlapBottom), fmin(fabs(overlapLeft), fabs(overlapRight))));
-
 
             if (smallestOverlap == fabs(overlapTop)) 
             {
                 // Collision with the top of the square
                 ballPosition.y = squareY - BALL_RADIUS;
-                if (fabs(velocity.y) < STOP_THRESHOLD) 
-                {
-                    velocity.y = 0;
-                    isRolling = true;
-                } 
-                else 
-                {
-                    velocity.y *= -DAMPING;
-                    isRolling = false;
-                }
+                velocity.y = (fabs(velocity.y) < STOP_THRESHOLD) ? 0 : velocity.y * -DAMPING;
+                isRolling = (velocity.y == 0);
             } 
             else if (smallestOverlap == fabs(overlapBottom)) 
             {
@@ -169,11 +161,18 @@ void Ball::checkCollisions(const std::vector<TerrainSquare>& terrain)
                 ballPosition.x = squareX - BALL_RADIUS;
                 velocity.x *= -DAMPING;
             } 
-            else if (smallestOverlap == fabs(overlapRight)) 
+            else 
             {
                 // Collision with the right side of the square
                 ballPosition.x = squareX + squareWidth + BALL_RADIUS;
                 velocity.x *= -DAMPING;
+            }
+
+            // Prevent corner conflicts by damping velocity on both axes if required
+            if (fabs(smallestOverlap) < edgeTolerance) 
+            {
+                velocity.x *= DAMPING;
+                velocity.y *= DAMPING;
             }
         }
     }
