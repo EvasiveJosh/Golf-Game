@@ -9,11 +9,22 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     this->endlessMode = !info[2];
     end = false;
     Terrain terrainGenerator;
-    
+    //Set levelsize based on difficulty
+    switch (difficulty) {
+        case 0:
+            levelScale = 1; //Easy
+            break;
+        case 1:
+            levelScale = 2; //Medium
+            break;
+        case 2:
+            levelScale = 3; //Hard
+            break;
+    }
     //Load mouse
     mouse = Mouse();
     //Load golfball
-    golfball = Ball(WHITE);
+    golfball = Ball(WHITE,levelScale);
     // To align hole png and hitbox, flag image is basex - 98, hole box is basex -169,
     // so flag image must be -71 more than hole to align assuming the flag scale is not changed.
     // For the y axis, the hole is -10, the flag is -189 to align. So the flag image must
@@ -27,17 +38,17 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
-    int holeX = sst::baseX - 98;
+    int holeX = (sst::baseX - 98) * levelScale;
     int holeY = sst::baseY - GRASS_HEIGHT - 5;
     addButton("Hole", Rectangle{(float)holeX, (float)holeY, 15, 15});
-
+    //initialize flag - adjust X position slightly less to the left
+    flag = Flag(holeX, holeY, 1.0f);
     //old flag code (just in case) DELETE LATER
     // flag.loadImage("resources", PixelFlag); //Get flag
     // flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
     // flag.loadTexture(); //Load the image into a texture
 
-    //initialize flag - adjust X position slightly less to the left
-    flag = Flag(holeX, holeY, 1.0f);
+    //vector holding terrain segments
     terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
@@ -48,6 +59,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     cameraShouldCenter = false;
     smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
     defaultZoom = 1.0f;
+    
 }
 
 void SingleplayerMatch::draw()
@@ -57,11 +69,11 @@ void SingleplayerMatch::draw()
 
     //base terrain
     DrawRectangle(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), 
-                 sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), GREEN);
+                 sst::cx(sst::baseX*levelScale), sst::cyf(GRASS_HEIGHT), GREEN);
 
     //Draw some default sky
     DrawRectangle(sst::cx(0), sst::cy(0), 
-                 sst::cx(sst::baseX), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
+                 sst::cx(sst::baseX*levelScale), sst::cyf(sst::baseY - GRASS_HEIGHT), BLUE);
 
     //draw flag
     flag.draw();

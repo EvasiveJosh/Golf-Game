@@ -34,10 +34,10 @@ vector<TerrainSquare> Terrain::GenerateTerrain(int difficulty, Ball& golfball, c
         levelSize = 8;
     }
     else if(difficulty == 1){ //difficulty medium
-        levelSize = 10;
+        levelSize = 15;
     }
     else{ //difficulty hard
-        levelSize = 12;
+        levelSize = 20;
     }
     //get the width between the ball and flag
     int totalWidth = flagposVec.x - (ballPosVec.x + 50);
@@ -49,7 +49,7 @@ vector<TerrainSquare> Terrain::GenerateTerrain(int difficulty, Ball& golfball, c
     vector<TerrainSquare> terrain; //vector that holds the segment objects
     srand(time(0));
     for(int i = 0; i<levelSize ;i++){
-        int randomHeight = rand() % 150 + 30;
+        int randomHeight = rand() % 200 + 30;
         TerrainSquare temp(randomHeight,x,segmentWidth,i+1);
         terrain.push_back(temp);
         x += segmentWidth;

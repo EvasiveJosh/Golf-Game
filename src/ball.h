@@ -27,6 +27,7 @@ class Ball
         Vector2 velocity;
         Vector2 previousStartPosition;
         bool isOutOfBounds;
+        int scale;
 
         //Stats
         int shotCount;
@@ -43,7 +44,7 @@ class Ball
         bool isStopped;
 
         Ball();
-        Ball(CLITERAL(Color) color);
+        Ball(CLITERAL(Color) color,int levelScale);
         //Draws the ball on the screen
         void draw();
         void drawDebug();

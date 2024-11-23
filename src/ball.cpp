@@ -14,7 +14,7 @@ Ball::Ball()
     ballColor = WHITE;
 }
 
-Ball::Ball(CLITERAL(Color) color)
+Ball::Ball(CLITERAL(Color) color,int levelScale)
 {
     ballPosition = {BALL_RADIUS + 80, sst::baseY - BALL_RADIUS - GRASS_HEIGHT };
     previousStartPosition = ballPosition;
@@ -25,6 +25,7 @@ Ball::Ball(CLITERAL(Color) color)
     shotCount = 0;
     bool isOutOfBounds = false;
     ballColor = color;
+    this->scale = levelScale;
 }
 
 void Ball::draw()
@@ -47,7 +48,7 @@ void Ball::drawDebug()
 {
     //Draw minimum height terrain lines
     int font = 30;
-    DrawRectangleLines(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX), sst::cyf(GRASS_HEIGHT), BLACK);
+    DrawRectangleLines(sst::cx(0), sst::cyf(sst::baseY - GRASS_HEIGHT), sst::cx(sst::baseX*scale), sst::cyf(GRASS_HEIGHT), BLACK);
     DrawText(TextFormat("Shots: %d", shotCount), sst::cx(0), sst::cy(sst::baseY - 100), sst::cx(font), BLACK);
     DrawText(TextFormat("isRolling: %i", static_cast<int>(isRolling)), sst::cx(0), sst::cy(sst::baseY - 50), sst::cx(font), BLACK);
 }
@@ -75,7 +76,7 @@ void Ball::updatePhysics()
 void Ball::checkCollisions()
 {
     // Base screen dimensions
-    float screenWidthBase = sst::baseX;
+    float screenWidthBase = sst::baseX * scale;
     float screenHeightBase = sst::baseY;
 
     // Minimum height collision
