@@ -123,10 +123,13 @@ void Ball::checkCollisions(const std::vector<TerrainSquare>& terrain)
         int squareY = sst::baseY - GRASS_HEIGHT - square.getHeight();
         int squareHeight = square.getHeight();
 
-        // Check if the ball is intersecting the terrain square
-        bool withinXBounds = (ballPosition.x + BALL_RADIUS > squareX) && (ballPosition.x - BALL_RADIUS < squareX + squareWidth);
-        bool withinYBounds = (ballPosition.y + BALL_RADIUS > squareY) && (ballPosition.y - BALL_RADIUS < squareY + squareHeight);
+        const float edgeTolerance = 0.01f;
+        bool withinXBounds = (ballPosition.x + BALL_RADIUS - edgeTolerance > squareX) &&
+                            (ballPosition.x - BALL_RADIUS + edgeTolerance < squareX + squareWidth);
+        bool withinYBounds = (ballPosition.y + BALL_RADIUS - edgeTolerance > squareY) &&
+                            (ballPosition.y - BALL_RADIUS + edgeTolerance < squareY + squareHeight);
 
+        // Check if the ball is intersecting the terrain square
         if (withinXBounds && withinYBounds) 
         {
             // Check which side the ball is colliding with and adjust accordingly
