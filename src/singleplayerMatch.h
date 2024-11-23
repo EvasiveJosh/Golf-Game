@@ -30,6 +30,7 @@ class SingleplayerMatch : public Match
         Ball golfball;
         bool isPaused;
         float defaultZoom;
+        int levelScale;
     public:
         SingleplayerMatch(std::vector<int> info);
         void draw() override;
