@@ -269,7 +269,7 @@ void SingleplayerMatch::updateCamera() {
 
     // Camera centered (when `cameraShouldCenter` is true)
     if (cameraShouldCenter) {
-        Vector2 targetPosition = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)};
+        Vector2 targetPosition = {sst::cxf(sst::baseX / 2.0f) + sst::cxf(golfball.getBallPosition().x / 2.0f), sst::cyf(sst::baseY / 2.0f)};
         float centerZoom = 1.0f;
 
         // Smoothly move the camera towards the center position
