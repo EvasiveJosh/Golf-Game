@@ -14,7 +14,6 @@ Ball::Ball(CLITERAL(Color) color)
 void Ball::draw()
 {
     // Draw ball
-
     float ballpositionX = this->getPosition().x;
     float ballpositionY = this->getPosition().y;
 

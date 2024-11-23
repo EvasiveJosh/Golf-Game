@@ -4,15 +4,8 @@
 
 bool PhysicsCollision::checkCollision(PhysicsObject* obj1, PhysicsObject* obj2) {
 
-    std::cout << "Test" << std::endl;
-
     enum Shape shape1 = obj1->getShape();
-
-    std::cout << "Test" << std::endl;
-
-    enum Shape shape2 = obj2->getShape();
-
-    std::cout << "Test" << std::endl;
+    enum Shape shape2 = Shape::RECTANGLE;
 
     if (shape1 == Shape::CIRCLE && shape2 == Shape::CIRCLE) {
         return checkCircleCircleCollision(static_cast<Ball*>(obj1), static_cast<Ball*>(obj2));

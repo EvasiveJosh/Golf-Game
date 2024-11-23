@@ -60,6 +60,8 @@ set(HEADERS
 ]]
 
 set(SOURCES src/rectangle.cpp)
+set(SOURCES src/PhysicsCollision.cpp)
+
 
 file(GLOB HEADERS "src/*.h")
 file(GLOB SOURCES "src/*.cpp")
