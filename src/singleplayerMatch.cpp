@@ -9,15 +9,16 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     this->endlessMode = !info[2];
     end = false;
     Terrain terrainGenerator;
+    //Set levelsize based on difficulty
     switch (difficulty) {
         case 0:
-            levelScale = 1; // Easy
+            levelScale = 1; //Easy
             break;
         case 1:
-            levelScale = 2; // Medium
+            levelScale = 2; //Medium
             break;
         case 2:
-            levelScale = 3; // Hard
+            levelScale = 3; //Hard
             break;
     }
     //Load mouse
@@ -37,7 +38,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     Vector2 ballPosVec = golfball.getBallPosition();
     addButton("Ball", {ballPosVec.x - 13, ballPosVec.y - 13, 28, 28});
     //Create Hole at ground level at opposite playing side
-    int holeX = sst::baseX - 98;
+    int holeX = (sst::baseX - 98) * levelScale;
     int holeY = sst::baseY - GRASS_HEIGHT - 5;
     addButton("Hole", Rectangle{(float)holeX, (float)holeY, 15, 15});
     //initialize flag - adjust X position slightly less to the left
@@ -47,7 +48,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     // flag.rescale((int)sst::cxf(100 * 1.0f), sst::cy(100 * 2.0f)); //Rescale flag to fit windowSize
     // flag.loadTexture(); //Load the image into a texture
 
-    
+    //vector holding terrain segments
     terrain = terrainGenerator.GenerateTerrain(difficulty,golfball,flag);
     // Initialize camera
     camera.target = {sst::cxf(sst::baseX / 2.0f), sst::cyf(sst::baseY / 2.0f)}; // Set camera target to center of screen
