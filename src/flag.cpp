@@ -4,13 +4,13 @@
 Flag::Flag(){
     flagPosition = {0, 0};
     scale = 1.0;
-    texture = LoadTexture("../resources/1.png");
+    texture = LoadTexture("./resources/1.png");
 }
 
 Flag::Flag(float baseX, float baseY, float scale)
     : scale(scale) {
     flagPosition = { baseX - 72, baseY };
-    texture = LoadTexture("../resources/1.png");
+    texture = LoadTexture("./resources/1.png");
 }
 
 
