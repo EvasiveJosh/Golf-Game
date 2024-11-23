@@ -57,7 +57,7 @@ SingleplayerMatch::SingleplayerMatch(std::vector<int> info) : isPaused(false)
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
     cameraShouldFollowBall = false;
-    cameraShouldCenter = false;
+    cameraShouldCenter = true;
     smoothingFactor = 0.1f; // Adjust smoothing (lower is slower)
     defaultZoom = 1.0f;
     
@@ -79,17 +79,20 @@ void SingleplayerMatch::draw()
 
     //draw flag
     flag.draw();
-    
-    //draw each terrain segment
+
+    //Draw Terrain
     for (const TerrainSquare& square : terrain) {
         int yPos = sst::baseY - GRASS_HEIGHT - square.getHeight() + 1;
-        DrawRectangle(sst::cxf(square.getPosX()), 
-                     sst::cyf(yPos),
-                     sst::cxf(square.getWidth() + 1),
-                     sst::cyf(square.getHeight() + 1),
-                     GREEN);
+
+        // Compute exact positions and dimensions
+        int startX = static_cast<int>(round(sst::cxf(square.getPosX())));
+        int startY = static_cast<int>(round(sst::cyf(yPos)));
+        int width = static_cast<int>(round(sst::cxf(square.getWidth())));
+        int height = static_cast<int>(round(sst::cyf(square.getHeight())));
+
+        DrawRectangle(startX, startY, width, height, GREEN);
     }
-    
+
     golfball.draw();
     EndMode2D();
 }
