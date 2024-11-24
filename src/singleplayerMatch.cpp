@@ -151,7 +151,10 @@ void SingleplayerMatch::drawDebug()
 }
 
 GuiEvent SingleplayerMatch::updateLogic()
-{   
+{
+    static bool isDraggingCamera = false; // Tracks if we're dragging the background
+    static Vector2 cameraDragStart = {0, 0}; // Stores the initial drag position
+
     if (keybinds.IsPressed("Pause")) // Use grave key as the pause hotkey
     {
         isPaused = !isPaused;
@@ -160,8 +163,8 @@ GuiEvent SingleplayerMatch::updateLogic()
 
     if (isPaused)
         return Nothing;
-    
-    //General logic to be checked here
+
+    // General logic to be checked here
     mouse.updateMousePosition();
     golfball.updatePhysics(terrain);
     Vector2 ballPosVec = golfball.getBallPosition();
@@ -170,7 +173,7 @@ GuiEvent SingleplayerMatch::updateLogic()
     // Update camera logic
     updateCamera();
 
-    //Check is ball has stopped on hole, if so, you won!
+    // Check if the ball has stopped on the hole; if so, you won!
     if (CheckCollisionRecs(buttons[0].getBounds(), buttons[1].getBounds()) && golfball.isStopped)
     {
         end = true;
@@ -178,34 +181,55 @@ GuiEvent SingleplayerMatch::updateLogic()
         return OpenSingleplayerWinMenu;
     }
 
-    //Launch the ball check
-    if (golfball.isStopped)
+    // Background dragging logic
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        // Convert mouse position to world coordinates
         Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && !golfball.isDragging)
-        {
-            // Apply scaling (similar to how you're drawing the ball)
-            Vector2 scaledBallPos = {sst::cxf(golfball.getBallPosition().x), sst::cyf(golfball.getBallPosition().y)};
-            
-            // Scale the radius by zoom level
-            float scaledRadius = BALL_RADIUS * sqrt((float)GetScreenWidth() / sst::baseX * (float)GetScreenHeight() / sst::baseY);
+        // Check if clicking on the ball
+        Vector2 scaledBallPos = {sst::cxf(golfball.getBallPosition().x), sst::cyf(golfball.getBallPosition().y)};
+        float scaledRadius = BALL_RADIUS * sqrt((float)GetScreenWidth() / sst::baseX * (float)GetScreenHeight() / sst::baseY);
 
-            // Check if mouse position is inside the ball's screen-space bounds
-            if (CheckCollisionPointCircle(mouseWorldPos, scaledBallPos, scaledRadius))
-            {
-                golfball.isDragging = true;
-                golfball.startDrag = scaledBallPos;
-                golfball.currentDrag = mouseWorldPos;
-                golfball.updateVelocity({0,0});
-            }
-        }
-        else if(IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
+        if (CheckCollisionPointCircle(mouseWorldPos, scaledBallPos, scaledRadius))
         {
+            // Start dragging the ball
+            golfball.isDragging = true;
+            golfball.startDrag = scaledBallPos;
             golfball.currentDrag = mouseWorldPos;
+            golfball.updateVelocity({0, 0});
         }
-        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && golfball.isDragging)
+        else
+        {
+            // Start dragging the camera
+            isDraggingCamera = true;
+            cameraShouldCenter = false;
+            cameraShouldFollowBall = false;
+            cameraDragStart = GetMousePosition(); // Record the initial drag position
+        }
+    }
+    else if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && isDraggingCamera)
+    {
+        Vector2 currentMousePos = GetMousePosition();
+        Vector2 dragDelta = {currentMousePos.x - cameraDragStart.x, currentMousePos.y - cameraDragStart.y};
+
+        // Update the camera position based on drag movement
+        camera.target.x -= dragDelta.x / camera.zoom;
+        camera.target.y -= dragDelta.y / camera.zoom;
+
+        // Update the start position for the next frame
+        cameraDragStart = currentMousePos;
+    }
+    else if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && golfball.isDragging)
+    {
+        // Continue dragging the ball
+        Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+        golfball.currentDrag = mouseWorldPos;
+    }
+
+    // Release the mouse button
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+    {
+        if (golfball.isDragging)
         {
             Vector2 dragVector = {golfball.startDrag.x - golfball.currentDrag.x, golfball.startDrag.y - golfball.currentDrag.y};
             golfball.updateVelocity({(dragVector.x * LAUNCH_SCALE) / sst::cxf(1), (dragVector.y * LAUNCH_SCALE) / sst::cyf(1)});
@@ -213,6 +237,7 @@ GuiEvent SingleplayerMatch::updateLogic()
             golfball.isRolling = (wind == 3);
             golfball.updateLogic();
         }
+        isDraggingCamera = false; // Stop dragging the camera
     }
     return Nothing;
 }
