@@ -223,6 +223,22 @@ GuiEvent SingleplayerMatch::updateLogic()
     {
         // Continue dragging the ball
         Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+        
+        // Limit drag length
+        const float maxDragLength = 500.0f; // Set the max drag length
+        Vector2 dragVector = {golfball.startDrag.x - mouseWorldPos.x, golfball.startDrag.y - mouseWorldPos.y};
+        float dragLength = sqrt(dragVector.x * dragVector.x + dragVector.y * dragVector.y);
+        
+        if (dragLength > maxDragLength)
+        {
+            // Normalize the vector and scale it to maxDragLength
+            float scale = maxDragLength / dragLength;
+            dragVector.x *= scale;
+            dragVector.y *= scale;
+            mouseWorldPos.x = golfball.startDrag.x - dragVector.x;
+            mouseWorldPos.y = golfball.startDrag.y - dragVector.y;
+        }
+        
         golfball.currentDrag = mouseWorldPos;
     }
 
