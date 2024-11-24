@@ -59,17 +59,24 @@ void Ball::updatePhysics(const std::vector<TerrainSquare>& terrain)
 
     if (!isDragging)
     {
-        ballPosition.x += velocity.x;
-        ballPosition.y += velocity.y;
+        // Increase substeps for better accuracy, decrease for performance
+        const int subSteps = 5; 
+        const float subStepTime = 1.0f / subSteps;
 
-        //Apply Gravity
-        velocity.y += GRAVITY;
+        for (int i = 0; i < subSteps; ++i)
+        {
+            ballPosition.x += velocity.x * subStepTime;
+            ballPosition.y += velocity.y * subStepTime;
 
-        //Check for collisions
-        checkCollisions(terrain);
+            // Apply gravity
+            velocity.y += GRAVITY * subStepTime;
 
-        //Apply friction if rolling
-        applyFriction();
+            // Check for collisions at each sub-step
+            checkCollisions(terrain);
+
+            // Apply friction only on the first sub-step
+            if (i == 0) { applyFriction(); }
+        }
     }
 }
 
