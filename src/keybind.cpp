@@ -17,7 +17,7 @@ void Keybind::InitializeDefaultKeybinds() {
     keyMap["CamCenter"] = KEY_C;
     keyMap["CamFollow"] = KEY_F;
     keyMap["Pause"] = KEY_GRAVE;
-    keyMap["Debug"] = KEY_P;
+    keyMap["Debug"] = KEY_COMMA;
 }
 
 // Set a new key for a specific action
