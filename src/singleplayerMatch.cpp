@@ -87,8 +87,8 @@ void SingleplayerMatch::draw()
         // Compute exact positions and dimensions
         int startX = static_cast<int>(round(sst::cxf(square.getPosX())));
         int startY = static_cast<int>(round(sst::cyf(yPos)));
-        int width = static_cast<int>(round(sst::cxf(square.getWidth())));
-        int height = static_cast<int>(round(sst::cyf(square.getHeight())));
+        int width = static_cast<int>(round(sst::cxf(square.getWidth() + 1)));
+        int height = static_cast<int>(round(sst::cyf(square.getHeight() + 1)));
 
         DrawRectangle(startX, startY, width, height, GREEN);
     }
